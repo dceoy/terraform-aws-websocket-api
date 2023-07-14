@@ -1,9 +1,9 @@
-aws-sam-docker-function
+aws-cdk-lambda-rest-api
 =======================
 
-AWS SAM stacks for REST API application
+AWS CDK stacks for REST API application
 
-[![Lint](https://github.com/dceoy/aws-cfn-docker-function/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/aws-cfn-docker-function/actions/workflows/lint.yml)
+[![Lint](https://github.com/dceoy/aws-lambda-rest-api/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/aws-lambda-rest-api/actions/workflows/lint.yml)
 
 Installation
 ------------
@@ -11,8 +11,8 @@ Installation
 1.  Check out the repository.
 
     ```sh
-    $ git clone --recurse-submodules git@github.com:dceoy/aws-cfn-docker-function.git
-    $ cd aws-cfn-docker-function
+    $ git clone https://github.com/dceoy/aws-cdk-lambda-rest-api.git
+    $ cd aws-cdk-lambda-rest-api
     ```
 
-2.  Install [AWS SAM CLI](https://github.com/aws/aws-sam-cli) and set `~/.aws/config` and `~/.aws/credentials`.
+2.  Install [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html) and set `~/.aws/config` and `~/.aws/credentials`.
