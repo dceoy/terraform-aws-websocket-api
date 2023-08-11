@@ -1,9 +1,9 @@
-aws-cdk-lambda-rest-api
-=======================
+terraform-lambda-rest-api
+=========================
 
-AWS CDK stacks for REST API application
+Terraform stacks for REST API application
 
-[![Lint](https://github.com/dceoy/aws-lambda-rest-api/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/aws-lambda-rest-api/actions/workflows/lint.yml)
+[![Lint](https://github.com/dceoy/terraform-lambda-rest-api/actions/workflows/lint.yml/badge.svg)](https://github.com/dceoy/terraform-lambda-rest-api/actions/workflows/lint.yml)
 
 Installation
 ------------
@@ -11,8 +11,8 @@ Installation
 1.  Check out the repository.
 
     ```sh
-    $ git clone https://github.com/dceoy/aws-cdk-lambda-rest-api.git
-    $ cd aws-cdk-lambda-rest-api
+    $ git clone https://github.com/dceoy/terraform-lambda-rest-api.git
+    $ cd terraform-lambda-rest-api
     ```
 
-2.  Install [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html) and set `~/.aws/config` and `~/.aws/credentials`.
+2.  Install Terraform and set `~/.aws/config` and `~/.aws/credentials`.
