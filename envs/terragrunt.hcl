@@ -57,6 +57,9 @@ catalog {
 inputs = {
   system_name                      = local.env_vars.locals.system_name
   env_type                         = local.env_vars.locals.env_type
+  create_kms_key                   = true
+  kms_key_deletion_window_in_days  = 30
+  kms_key_rotation_period_in_days  = 365
   ecr_repository_name              = local.image_name
   ecr_image_secondary_tags         = compact(split(",", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability         = "MUTABLE"
