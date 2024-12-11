@@ -74,7 +74,7 @@ resource "aws_kms_key" "custom" {
         }
       },
       {
-        Sid = "AllowDynamoDBServiceToEncrypt"
+        Sid    = "AllowDynamoDBServiceToEncrypt"
         Effect = "Allow"
         Principal = {
           Service = "dynamodb.amazonaws.com"
