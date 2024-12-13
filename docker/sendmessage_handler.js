@@ -11,7 +11,7 @@ exports.handler = async function (event) {
   const client = new DynamoDBClient({});
   const docClient = DynamoDBDocumentClient.from(client);
   const ddbcommand = new ScanCommand({
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.CONNECTION_DYNAMODB_TABLE_NAME,
   });
 
   let connections;

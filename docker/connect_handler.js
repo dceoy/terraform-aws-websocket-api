@@ -4,7 +4,7 @@ exports.handler = async function (event) {
   const client = new DynamoDBClient({});
   const docClient = DynamoDBDocumentClient.from(client);
   const command = new PutCommand({
-    TableName: process.env.TABLE_NAME,
+    TableName: process.env.CONNECTION_DYNAMODB_TABLE_NAME,
     Item: {
       connectionId: event.requestContext.connectionId,
     },

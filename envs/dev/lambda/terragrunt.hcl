@@ -33,11 +33,11 @@ dependency "dynamodb" {
 }
 
 inputs = {
+  kms_key_arn                          = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
   connect_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["connect-handler"]
   disconnect_handler_lambda_image_uri  = dependency.docker.outputs.docker_registry_primary_image_uris["disconnect-handler"]
   sendmessage_handler_lambda_image_uri = dependency.docker.outputs.docker_registry_primary_image_uris["sendmessage-handler"]
   default_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["default-handler"]
-  kms_key_arn                          = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
   lambda_environment_variables = {
     CONNECTION_DYNAMODB_TABLE_NAME = dependency.dynamodb.outputs.connection_dynamodb_table_id
   }

@@ -1,6 +1,6 @@
-output "connect_handler_lambda_function_arn" {
-  description = "Lambda function ARN of the connect handler"
-  value       = aws_lambda_function.functions["connect-handler"].arn
+output "connect_handler_lambda_function_name" {
+  description = "Lambda function name of the connect handler"
+  value       = aws_lambda_function.functions["connect-handler"].function_name
 }
 
 output "connect_handler_lambda_function_qualified_arn" {
@@ -13,9 +13,14 @@ output "connect_handler_lambda_function_version" {
   value       = aws_lambda_function.functions["connect-handler"].version
 }
 
-output "disconnect_handler_lambda_function_arn" {
-  description = "Lambda function ARN of the disconnect handler"
-  value       = aws_lambda_function.functions["disconnect-handler"].arn
+output "connect_handler_lambda_function_invoke_arn" {
+  description = "Lambda function invoke ARN of the connect handler"
+  value       = aws_lambda_function.functions["connect-handler"].invoke_arn
+}
+
+output "disconnect_handler_lambda_function_name" {
+  description = "Lambda function name of the disconnect handler"
+  value       = aws_lambda_function.functions["disconnect-handler"].function_name
 }
 
 output "disconnect_handler_lambda_function_qualified_arn" {
@@ -28,9 +33,14 @@ output "disconnect_handler_lambda_function_version" {
   value       = aws_lambda_function.functions["disconnect-handler"].version
 }
 
-output "sendmessage_handler_lambda_function_arn" {
-  description = "Lambda function ARN of the sendmessage handler"
-  value       = aws_lambda_function.functions["sendmessage-handler"].arn
+output "disconnect_handler_lambda_function_invoke_arn" {
+  description = "Lambda function invoke ARN of the disconnect handler"
+  value       = aws_lambda_function.functions["disconnect-handler"].invoke_arn
+}
+
+output "sendmessage_handler_lambda_function_name" {
+  description = "Lambda function name of the sendmessage handler"
+  value       = aws_lambda_function.functions["sendmessage-handler"].function_name
 }
 
 output "sendmessage_handler_lambda_function_qualified_arn" {
@@ -43,9 +53,14 @@ output "sendmessage_handler_lambda_function_version" {
   value       = aws_lambda_function.functions["sendmessage-handler"].version
 }
 
-output "default_handler_lambda_function_arn" {
-  description = "Lambda function ARN of the default handler"
-  value       = aws_lambda_function.functions["default-handler"].arn
+output "sendmessage_handler_lambda_function_invoke_arn" {
+  description = "Lambda function invoke ARN of the sendmessage handler"
+  value       = aws_lambda_function.functions["sendmessage-handler"].invoke_arn
+}
+
+output "default_handler_lambda_function_name" {
+  description = "Lambda function name of the default handler"
+  value       = aws_lambda_function.functions["default-handler"].function_name
 }
 
 output "default_handler_lambda_function_qualified_arn" {
@@ -56,6 +71,11 @@ output "default_handler_lambda_function_qualified_arn" {
 output "default_handler_lambda_function_version" {
   description = "Lambda function version of the default handler"
   value       = aws_lambda_function.functions["default-handler"].version
+}
+
+output "default_handler_lambda_function_invoke_arn" {
+  description = "Lambda function invoke ARN of the default handler"
+  value       = aws_lambda_function.functions["default-handler"].invoke_arn
 }
 
 output "connect_handler_lambda_iam_role_arn" {

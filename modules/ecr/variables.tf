@@ -12,8 +12,8 @@ variable "env_type" {
 
 variable "ecr_repository_names" {
   description = "ECR repository names"
-  type        = list(string)
-  default     = []
+  type        = map(string)
+  default     = {}
 }
 
 variable "ecr_image_tag_mutability" {

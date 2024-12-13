@@ -1,8 +1,8 @@
 # trivy:ignore:avd-aws-0031
 # trivy:ignore:avd-aws-0033
 resource "aws_ecr_repository" "containers" {
-  for_each             = toset(var.ecr_repository_names)
-  name                 = each.key
+  for_each             = var.ecr_repository_names
+  name                 = each.value
   image_tag_mutability = var.ecr_image_tag_mutability
   force_delete         = var.ecr_force_delete
   image_scanning_configuration {
@@ -12,7 +12,7 @@ resource "aws_ecr_repository" "containers" {
     encryption_type = "AES256"
   }
   tags = {
-    Name       = each.key
+    Name       = each.value
     SystemName = var.system_name
     EnvType    = var.env_type
   }
