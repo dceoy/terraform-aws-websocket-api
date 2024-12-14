@@ -1,7 +1,7 @@
 terraform-aws-websocket-api
 ===========================
 
-Terraform stacks for WebSocket API
+Terraform stacks for [the tutrial of Amazon API Gateway WebSocket API](https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-chat-app.html).
 
 [![CI/CD](https://github.com/dceoy/terraform-aws-websocket-api/actions/workflows/ci.yml/badge.svg)](https://github.com/dceoy/terraform-aws-websocket-api/actions/workflows/ci.yml)
 
