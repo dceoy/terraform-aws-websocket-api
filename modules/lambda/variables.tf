@@ -66,12 +66,12 @@ variable "lambda_architectures" {
   }
 }
 
-variable "lambda_memory_size" {
-  description = "Lambda memory size in MB"
-  type        = number
-  default     = 128
+variable "lambda_memory_sizes" {
+  description = "Lambda memory sizes in MB (key: arbitrary key, value: memory size)"
+  type        = map(number)
+  default     = {}
   validation {
-    condition     = var.lambda_memory_size >= 128 && var.lambda_memory_size <= 10240
+    condition     = alltrue([for k, v in var.lambda_memory_sizes : v >= 128 && v <= 10240])
     error_message = "Lambda memory size must be between 128 and 10240"
   }
 }
@@ -122,38 +122,30 @@ variable "lambda_logging_config_system_log_level" {
   }
 }
 
-variable "lambda_ephemeral_storage_size" {
-  description = "Lambda ephemeral storage (/tmp) size in MB"
-  type        = number
-  default     = 512
+variable "lambda_ephemeral_storage_sizes" {
+  description = "Lambda ephemeral storage (/tmp) sizes in MB (key: arbitrary key, value: storage size)"
+  type        = map(number)
+  default     = {}
   validation {
-    condition     = var.lambda_ephemeral_storage_size >= 512 && var.lambda_ephemeral_storage_size <= 10240
+    condition     = alltrue([for k, v in var.lambda_ephemeral_storage_size : v >= 512 && v <= 10240])
     error_message = "Lambda ephemeral storage size must be between 512 and 10240"
   }
 }
 
-variable "lambda_image_config_entry_point" {
-  description = "Lambda image config entry point"
-  type        = list(string)
-  default     = []
-
-}
-variable "lambda_image_config_command" {
-  description = "Lambda image config command"
-  type        = list(string)
-  default     = []
-}
-
-variable "lambda_image_config_working_directory" {
-  description = "Lambda image config working directory"
-  type        = string
-  default     = null
-}
-
 variable "lambda_environment_variables" {
-  description = "Lambda environment variables"
-  type        = map(string)
+  description = "Lambda environment variables (key: arbitrary key, value: map of environment variables)"
+  type        = map(map(string))
   default     = {}
+}
+
+variable "lambda_image_configs" {
+  description = "Lambda image configurations (key: arbitrary key, value: map of image configurations)"
+  type        = map(map(string))
+  default     = {}
+  validation {
+    condition     = alltrue([for k, v in var.lambda_image_configs : contains(keys(v), "entry_point") || contains(keys(v), "command") || contains(keys(v), "working_directory")])
+    error_message = "Lambda image configurations must contain at least one of entry_point, command, or working_directory"
+  }
 }
 
 variable "lambda_tracing_config_mode" {

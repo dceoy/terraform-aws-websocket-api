@@ -6,7 +6,7 @@ resource "aws_lambda_function" "functions" {
   package_type                   = "Image"
   image_uri                      = local.lambda_image_uris[each.key]
   architectures                  = var.lambda_architectures
-  memory_size                    = var.lambda_memory_size
+  memory_size                    = var.lambda_memory_sizes[each.key]
   timeout                        = var.lambda_timeout
   reserved_concurrent_executions = var.lambda_reserved_concurrent_executions
   logging_config {
@@ -19,29 +19,29 @@ resource "aws_lambda_function" "functions" {
     mode = var.lambda_tracing_config_mode
   }
   dynamic "environment" {
-    for_each = length(var.lambda_environment_variables) > 0 ? [true] : []
+    for_each = lookup(var.lambda_environment_variables, each.key) != null ? [true] : []
     content {
-      variables = var.lambda_environment_variables
+      variables = var.lambda_environment_variables[each.key]
     }
   }
   dynamic "ephemeral_storage" {
-    for_each = var.lambda_ephemeral_storage_size != null ? [true] : []
+    for_each = lookup(var.lambda_ephemeral_storage_sizes, each.key) != null ? [true] : []
     content {
-      size = var.lambda_ephemeral_storage_size
+      size = var.lambda_ephemeral_storage_sizes[each.key]
     }
   }
   dynamic "image_config" {
-    for_each = length(var.lambda_image_config_entry_point) > 0 || length(var.lambda_image_config_command) > 0 || var.lambda_image_config_working_directory != null ? [true] : []
+    for_each = lookup(var.lambda_image_configs, each.key) != null ? [true] : []
     content {
-      entry_point       = var.lambda_image_config_entry_point
-      command           = var.lambda_image_config_command
-      working_directory = var.lambda_image_config_working_directory
+      entry_point       = lookup(var.lambda_image_configs[each.key], "entry_point", null)
+      command           = lookup(var.lambda_image_configs[each.key], "command", null)
+      working_directory = lookup(var.lambda_image_configs[each.key], "working_directory", null)
     }
   }
   tags = {
-    Name    = local.lambda_function_names[each.key]
-    System  = var.system_name
-    EnvType = var.env_type
+    Name       = local.lambda_function_names[each.key]
+    SystemName = var.system_name
+    EnvType    = var.env_type
   }
 }
 
@@ -85,9 +85,9 @@ resource "aws_iam_role" "functions" {
     ]
   })
   tags = {
-    Name    = "${var.system_name}-${var.env_type}-lambda-${each.key}-iam-role"
-    System  = var.system_name
-    EnvType = var.env_type
+    Name       = "${var.system_name}-${var.env_type}-lambda-${each.key}-iam-role"
+    SystemName = var.system_name
+    EnvType    = var.env_type
   }
 }
 

@@ -1,5 +1,5 @@
 variable "ecr_repository_urls" {
-  description = "ECR repository URLs"
+  description = "ECR repository URLs (key: arbitrary key, value: ECR repository URL)"
   type        = map(string)
   default     = {}
 }
@@ -23,25 +23,25 @@ variable "docker_image_build" {
 }
 
 variable "docker_image_build_targets" {
-  description = "Docker image build target stages"
+  description = "Docker image build target stages (key: arbitrary key, value: target stage)"
   type        = map(string)
   default     = {}
 }
 
-variable "docker_image_build_context" {
-  description = "Docker image build context"
-  type        = string
-  default     = "."
+variable "docker_image_build_contexts" {
+  description = "Docker image build contexts (key: arbitrary key, value: build context)"
+  type        = map(string)
+  default     = {}
 }
 
-variable "docker_image_build_dockerfile" {
-  description = "Dockerfile name"
-  type        = string
-  default     = "Dockerfile"
+variable "docker_image_build_dockerfiles" {
+  description = "Dockerfile names (key: arbitrary key, value: Dockerfile name)"
+  type        = map(string)
+  default     = {}
 }
 
 variable "docker_image_build_build_args" {
-  description = "Docker image build-time variables"
+  description = "Docker image build-time variables (key: arbitrary key, value: build-time variable)"
   type        = map(string)
   default     = {}
 }

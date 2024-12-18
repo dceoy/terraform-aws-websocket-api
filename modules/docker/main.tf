@@ -6,10 +6,10 @@ resource "docker_image" "primary" {
   dynamic "build" {
     for_each = var.docker_image_build ? [true] : []
     content {
-      target     = var.docker_image_build_targets[each.key]
-      context    = var.docker_image_build_context
-      dockerfile = var.docker_image_build_dockerfile
-      build_args = var.docker_image_build_build_args
+      target     = lookup(var.docker_image_build_targets, each.key, null)
+      context    = lookup(var.docker_image_build_contexts, each.key, null)
+      dockerfile = lookup(var.docker_image_build_dockerfiles, each.key, null)
+      build_args = lookup(var.docker_image_build_build_args, each.key, {})
       platform   = var.docker_image_build_platform
     }
   }

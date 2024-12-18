@@ -7,6 +7,12 @@ locals {
   }
   repo_root = get_repo_root()
   env_vars  = read_terragrunt_config(find_in_parent_folders("env.hcl"))
+  ecr_repository_names = {
+    connect-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-connect-handler"
+    disconnect-handler  = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-disconnect-handler"
+    sendmessage-handler = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-sendmessage-handler"
+    default-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-default-handler"
+  }
 }
 
 terraform {
@@ -61,17 +67,12 @@ catalog {
 }
 
 inputs = {
-  system_name                     = local.env_vars.locals.system_name
-  env_type                        = local.env_vars.locals.env_type
-  create_kms_key                  = true
-  kms_key_deletion_window_in_days = 30
-  kms_key_rotation_period_in_days = 365
-  ecr_repository_names = {
-    connect-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-connect-handler"
-    disconnect-handler  = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-disconnect-handler"
-    sendmessage-handler = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-sendmessage-handler"
-    default-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-default-handler"
-  }
+  system_name                              = local.env_vars.locals.system_name
+  env_type                                 = local.env_vars.locals.env_type
+  create_kms_key                           = true
+  kms_key_deletion_window_in_days          = 30
+  kms_key_rotation_period_in_days          = 365
+  ecr_repository_names                     = local.ecr_repository_names
   ecr_image_secondary_tags                 = compact(split(",", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability                 = "MUTABLE"
   ecr_force_delete                         = true
@@ -86,27 +87,46 @@ inputs = {
     sendmessage-handler = "sendmessage_handler"
     default-handler     = "default_handler"
   }
-  docker_image_build_context                  = "${local.repo_root}/docker"
-  docker_image_build_dockerfile               = "Dockerfile"
-  docker_image_build_build_args               = {}
-  docker_image_build_platform                 = local.docker_image_build_platforms[local.lambda_architecture]
-  docker_image_primary_tag                    = get_env("DOCKER_PRIMARY_TAG", "sha-${run_cmd("--terragrunt-quiet", "git", "rev-parse", "HEAD")}")
-  docker_host                                 = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
-  dynamodb_hash_key_for_connection_table      = "connectionId"
-  dynamodb_billing_mode                       = "PAY_PER_REQUEST"
-  dynamodb_point_in_time_recovery_enabled     = false
-  dynamodb_table_class                        = "STANDARD"
-  lambda_architectures                        = [local.lambda_architecture]
-  lambda_memory_size                          = 128
+  docker_image_build_contexts = {
+    for k in keys(local.ecr_repository_names) : k => "${local.repo_root}/docker"
+  }
+  docker_image_build_dockerfiles = {
+    for k in keys(local.ecr_repository_names) : k => "Dockerfile"
+  }
+  docker_image_build_build_args = {
+    for k in keys(local.ecr_repository_names) : k => {}
+  }
+  docker_image_build_platform             = local.docker_image_build_platforms[local.lambda_architecture]
+  docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", "sha-${run_cmd("--terragrunt-quiet", "git", "rev-parse", "HEAD")}")
+  docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
+  dynamodb_hash_key_for_connection_table  = "connectionId"
+  dynamodb_billing_mode                   = "PAY_PER_REQUEST"
+  dynamodb_point_in_time_recovery_enabled = false
+  dynamodb_table_class                    = "STANDARD"
+  lambda_architectures                    = [local.lambda_architecture]
+  lambda_memory_sizes = {
+    for k in keys(local.ecr_repository_names) : k => 128
+  }
+  lambda_ephemeral_storage_sizes = {
+    for k in keys(local.ecr_repository_names) : k => 512
+  }
+  lambda_environment_variables = {
+    for k in keys(local.ecr_repository_names) : k => {
+      SYSTEM_NAME = local.env_vars.locals.system_name
+      ENV_TYPE    = local.env_vars.locals.env_type
+    }
+  }
+  lambda_image_configs = {
+    connect-handler     = {}
+    disconnect-handler  = {}
+    sendmessage-handler = {}
+    default-handler     = {}
+  }
   lambda_timeout                              = 3
   lambda_reserved_concurrent_executions       = -1
   lambda_logging_config_log_format            = "JSON"
   lambda_logging_config_application_log_level = "INFO"
   lambda_logging_config_shadow_log_level      = "INFO"
-  lambda_ephemeral_storage_size               = 512
   lambda_tracing_config_mode                  = "Active"
   lambda_provisioned_concurrent_executions    = -1
-  # lambda_image_config_entry_point             = []
-  # lambda_image_config_command                 = []
-  # lambda_image_config_working_directory       = null
 }
