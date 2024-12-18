@@ -19,19 +19,25 @@ Installation
 
 3.  Install [Terraform](https://www.terraform.io/) and [Terragrunt](https://terragrunt.gruntwork.io/).
 
-4.  Initialize Terraform working directories.
+4.  Build the Docker images.
+
+    ```sh
+    $ ./build_docker_images.sh
+    ```
+
+5.  Initialize Terraform working directories.
 
     ```sh
     $ terragrunt run-all init --terragrunt-working-dir='envs/dev/' -upgrade -reconfigure
     ```
 
-5.  Generates a speculative execution plan. (Optional)
+6.  Generates a speculative execution plan. (Optional)
 
     ```sh
     $ terragrunt run-all plan --terragrunt-working-dir='envs/dev/'
     ```
 
-6.  Creates or updates infrastructure.
+7.  Creates or updates infrastructure.
 
     ```sh
     $ terragrunt run-all apply --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive

@@ -82,13 +82,13 @@ inputs = {
   docker_image_force_remove                = true
   docker_image_build                       = local.env_vars.locals.docker_image_build
   docker_image_build_targets = {
-    connect-handler     = "connect_handler"
-    disconnect-handler  = "disconnect_handler"
-    sendmessage-handler = "sendmessage_handler"
-    default-handler     = "default_handler"
+    for k in keys(local.ecr_repository_names) : k => "app"
   }
   docker_image_build_contexts = {
-    for k in keys(local.ecr_repository_names) : k => "${local.repo_root}/docker"
+    connect-handler     = "${local.repo_root}/connect_handler"
+    disconnect-handler  = "${local.repo_root}/disconnect_handler"
+    sendmessage-handler = "${local.repo_root}/sendmessage_handler"
+    default-handler     = "${local.repo_root}/default_handler"
   }
   docker_image_build_dockerfiles = {
     for k in keys(local.ecr_repository_names) : k => "Dockerfile"
