@@ -19,23 +19,23 @@ resource "aws_lambda_function" "functions" {
     mode = var.lambda_tracing_config_mode
   }
   dynamic "environment" {
-    for_each = lookup(var.lambda_environment_variables, each.key) != null ? [true] : []
+    for_each = lookup(var.lambda_environment_variables, each.key, null) != null ? [true] : []
     content {
-      variables = var.lambda_environment_variables[each.key]
+      variables = lookup(var.lambda_environment_variables, each.key, null)
     }
   }
   dynamic "ephemeral_storage" {
-    for_each = lookup(var.lambda_ephemeral_storage_sizes, each.key) != null ? [true] : []
+    for_each = lookup(var.lambda_ephemeral_storage_sizes, each.key, null) != null ? [true] : []
     content {
-      size = var.lambda_ephemeral_storage_sizes[each.key]
+      size = lookup(var.lambda_ephemeral_storage_sizes, each.key, null)
     }
   }
   dynamic "image_config" {
-    for_each = lookup(var.lambda_image_configs, each.key) != null ? [true] : []
+    for_each = lookup(var.lambda_image_config_entry_points, each.key, null) != null || lookup(var.lambda_image_config_commands, each.key, null) != null || lookup(var.lambda_image_config_working_directories, each.key, null) != null ? [true] : []
     content {
-      entry_point       = lookup(var.lambda_image_configs[each.key], "entry_point", null)
-      command           = lookup(var.lambda_image_configs[each.key], "command", null)
-      working_directory = lookup(var.lambda_image_configs[each.key], "working_directory", null)
+      entry_point       = lookup(var.lambda_image_config_entry_points, each.key, null)
+      command           = lookup(var.lambda_image_config_commands, each.key, null)
+      working_directory = lookup(var.lambda_image_config_working_directories, each.key, null)
     }
   }
   tags = {

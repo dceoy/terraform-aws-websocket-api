@@ -41,8 +41,8 @@ variable "docker_image_build_dockerfiles" {
 }
 
 variable "docker_image_build_build_args" {
-  description = "Docker image build-time variables (key: arbitrary key, value: build-time variable)"
-  type        = map(string)
+  description = "Docker image build-time variables (key: arbitrary key, value: map of build-time variables)"
+  type        = map(map(string))
   default     = {}
 }
 

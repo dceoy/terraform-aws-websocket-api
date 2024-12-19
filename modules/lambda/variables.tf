@@ -72,7 +72,7 @@ variable "lambda_memory_sizes" {
   default     = {}
   validation {
     condition     = alltrue([for k, v in var.lambda_memory_sizes : v >= 128 && v <= 10240])
-    error_message = "Lambda memory size must be between 128 and 10240"
+    error_message = "Lambda memory sizes must be between 128 and 10240"
   }
 }
 
@@ -127,8 +127,8 @@ variable "lambda_ephemeral_storage_sizes" {
   type        = map(number)
   default     = {}
   validation {
-    condition     = alltrue([for k, v in var.lambda_ephemeral_storage_size : v >= 512 && v <= 10240])
-    error_message = "Lambda ephemeral storage size must be between 512 and 10240"
+    condition     = alltrue([for k, v in var.lambda_ephemeral_storage_sizes : v >= 512 && v <= 10240])
+    error_message = "Lambda ephemeral storage sizes must be between 512 and 10240"
   }
 }
 
@@ -138,14 +138,22 @@ variable "lambda_environment_variables" {
   default     = {}
 }
 
-variable "lambda_image_configs" {
-  description = "Lambda image configurations (key: arbitrary key, value: map of image configurations)"
-  type        = map(map(string))
+variable "lambda_image_config_entry_points" {
+  description = "Lambda image config entry points (key: arbitrary key, value: list of entry points)"
+  type        = map(list(string))
   default     = {}
-  validation {
-    condition     = alltrue([for k, v in var.lambda_image_configs : contains(keys(v), "entry_point") || contains(keys(v), "command") || contains(keys(v), "working_directory")])
-    error_message = "Lambda image configurations must contain at least one of entry_point, command, or working_directory"
-  }
+
+}
+variable "lambda_image_config_commands" {
+  description = "Lambda image config commands (key: arbitrary key, value: list of commands)"
+  type        = map(list(string))
+  default     = {}
+}
+
+variable "lambda_image_config_working_directories" {
+  description = "Lambda image config working directories (key: arbitrary key, value: working directory)"
+  type        = map(string)
+  default     = {}
 }
 
 variable "lambda_tracing_config_mode" {

@@ -1,5 +1,4 @@
 locals {
-  image_name          = "web"
   lambda_architecture = "arm64"
   docker_image_build_platforms = {
     "x86_64" = "linux/amd64"
@@ -8,10 +7,10 @@ locals {
   repo_root = get_repo_root()
   env_vars  = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   ecr_repository_names = {
-    connect-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-connect-handler"
-    disconnect-handler  = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-disconnect-handler"
-    sendmessage-handler = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-sendmessage-handler"
-    default-handler     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-default-handler"
+    connect-handler     = "ws-connect-handler"
+    disconnect-handler  = "ws-disconnect-handler"
+    sendmessage-handler = "ws-sendmessage-handler"
+    default-handler     = "ws-default-handler"
   }
 }
 
@@ -97,7 +96,7 @@ inputs = {
     for k in keys(local.ecr_repository_names) : k => {}
   }
   docker_image_build_platform             = local.docker_image_build_platforms[local.lambda_architecture]
-  docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", "sha-${run_cmd("--terragrunt-quiet", "git", "rev-parse", "HEAD")}")
+  docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
   docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
   dynamodb_hash_key_for_connection_table  = "connectionId"
   dynamodb_billing_mode                   = "PAY_PER_REQUEST"
@@ -110,18 +109,9 @@ inputs = {
   lambda_ephemeral_storage_sizes = {
     for k in keys(local.ecr_repository_names) : k => 512
   }
-  lambda_environment_variables = {
-    for k in keys(local.ecr_repository_names) : k => {
-      SYSTEM_NAME = local.env_vars.locals.system_name
-      ENV_TYPE    = local.env_vars.locals.env_type
-    }
-  }
-  lambda_image_configs = {
-    connect-handler     = {}
-    disconnect-handler  = {}
-    sendmessage-handler = {}
-    default-handler     = {}
-  }
+  lambda_image_config_entry_points            = {}
+  lambda_image_config_commands                = {}
+  lambda_image_config_working_directories     = {}
   lambda_timeout                              = 3
   lambda_reserved_concurrent_executions       = -1
   lambda_logging_config_log_format            = "JSON"

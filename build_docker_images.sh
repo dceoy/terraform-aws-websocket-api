@@ -13,12 +13,13 @@ TAG_NAME="sha-$(git rev-parse --short HEAD)"
 BUILD_TARGET='app'
 PLATFORMS='linux/arm64'
 
-find src -type f -name Dockerfile -print0 \
-  | xargs -0 dirname \
-  | xargs -L1 basename \
-  | xargs -I{} -t docker buildx build \
-    --tag "${ECR_REGISTRY}/{}:${TAG_NAME}" \
+find "${SRC_DIR}" -type f -name Dockerfile -print0 | while IFS= read -r -d '' f; do
+  context_dir="$(dirname "${f}")"
+  image_name="$(basename "${context_dir}" | sed 's/_/-/g; s/^/ws-/')"
+  docker buildx build \
+    --tag "${ECR_REGISTRY}/${image_name}:${TAG_NAME}" \
     --target "${BUILD_TARGET}" \
     --platform "${PLATFORMS}" \
     --provenance false \
-    "${SRC_DIR}/{}"
+    "${context_dir}"
+done
