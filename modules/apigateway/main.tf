@@ -1,3 +1,55 @@
+resource "aws_api_gateway_account" "account" {
+  cloudwatch_role_arn = aws_iam_role.account.arn
+  reset_on_delete     = true
+}
+
+resource "aws_iam_role" "account" {
+  name                  = "${var.system_name}-${var.env_type}-apigateway-account-iam-role"
+  description           = "IAM role for an API Gateway account"
+  force_detach_policies = var.iam_role_force_detach_policies
+  path                  = "/"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowAPIGatewayAccountToAssumeRole"
+        Effect = "Allow"
+        Action = ["sts:AssumeRole"]
+        Principal = {
+          Service = "apigateway.amazonaws.com"
+        }
+      }
+    ]
+  })
+  tags = {
+    Name       = "${var.system_name}-${var.env_type}-apigateway-account-iam-role"
+    SystemName = var.system_name
+    EnvType    = var.env_type
+  }
+}
+
+resource "aws_iam_role_policy_attachments_exclusive" "account" {
+  role_name   = aws_iam_role.account.name
+  policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"]
+}
+
+resource "aws_iam_role_policy" "account" {
+  count = var.kms_key_arn != null ? 1 : 0
+  name  = "${var.system_name}-${var.env_type}-apigateway-account-iam-role-policy"
+  role  = aws_iam_role.account.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "AllowKMSAccess"
+        Effect   = "Allow"
+        Action   = ["kms:GenerateDataKey"]
+        Resource = [var.kms_key_arn]
+      }
+    ]
+  })
+}
+
 resource "aws_apigatewayv2_api" "websocket" {
   name                       = "${var.system_name}-${var.env_type}-websocket-api-gateway"
   description                = "${var.system_name}-${var.env_type}-websocket-api-gateway"
@@ -12,8 +64,8 @@ resource "aws_apigatewayv2_api" "websocket" {
 
 resource "aws_lambda_permission" "connect" {
   action        = "lambda:InvokeFunction"
-  function_name = local.connect_handler_lambda_function_name
-  qualifier     = local.connect_handler_lambda_function_version
+  function_name = local.lambda_function_names["connect-handler"]
+  qualifier     = local.lambda_function_versions["connect-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$connect"
 }
@@ -33,8 +85,8 @@ resource "aws_apigatewayv2_route" "connect" {
 
 resource "aws_lambda_permission" "disconnect" {
   action        = "lambda:InvokeFunction"
-  function_name = local.disconnect_handler_lambda_function_name
-  qualifier     = local.disconnect_handler_lambda_function_version
+  function_name = local.lambda_function_names["disconnect-handler"]
+  qualifier     = local.lambda_function_versions["disconnect-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$disconnect"
 }
@@ -54,8 +106,8 @@ resource "aws_apigatewayv2_route" "disconnect" {
 
 resource "aws_lambda_permission" "sendmessage" {
   action        = "lambda:InvokeFunction"
-  function_name = local.sendmessage_handler_lambda_function_name
-  qualifier     = local.sendmessage_handler_lambda_function_version
+  function_name = local.lambda_function_names["sendmessage-handler"]
+  qualifier     = local.lambda_function_versions["sendmessage-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*sendmessage"
 }
@@ -69,14 +121,14 @@ resource "aws_apigatewayv2_integration" "sendmessage" {
 resource "aws_apigatewayv2_route" "sendmessage" {
   api_id             = aws_apigatewayv2_api.websocket.id
   authorization_type = "NONE"
-  route_key          = "$sendmessage"
+  route_key          = "sendmessage"
   target             = "integrations/${aws_apigatewayv2_integration.sendmessage.id}"
 }
 
 resource "aws_lambda_permission" "default" {
   action        = "lambda:InvokeFunction"
-  function_name = local.default_handler_lambda_function_name
-  qualifier     = local.default_handler_lambda_function_version
+  function_name = local.lambda_function_names["default-handler"]
+  qualifier     = local.lambda_function_versions["default-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$default"
 }
@@ -107,8 +159,9 @@ resource "aws_cloudwatch_log_group" "websocket" {
 }
 
 resource "aws_apigatewayv2_stage" "websocket" {
+  depends_on  = [aws_api_gateway_account.account]
   name        = "production"
-  description = "Production stage for ${var.system_name}-${var.env_type}-websocket-api-gateway"
+  description = "Production stage for ${aws_apigatewayv2_api.websocket.name}"
   api_id      = aws_apigatewayv2_api.websocket.id
   auto_deploy = true
   access_log_settings {
@@ -128,7 +181,7 @@ resource "aws_apigatewayv2_stage" "websocket" {
     })
   }
   tags = {
-    Name       = "${var.system_name}-${var.env_type}-websocket-api-gateway-production"
+    Name       = "${aws_apigatewayv2_api.websocket.name}-production"
     SystemName = var.system_name
     EnvType    = var.env_type
   }
