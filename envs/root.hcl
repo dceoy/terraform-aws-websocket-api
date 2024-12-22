@@ -56,11 +56,12 @@ EOF
 
 catalog {
   urls = [
-    "github.com/dceoy/terraform-aws-docker-based-lambda",
+    "${local.repo_root}/modules/kms",
+    "${local.repo_root}/modules/account",
     "${local.repo_root}/modules/ecr",
     "${local.repo_root}/modules/docker",
-    "${local.repo_root}/modules/lambda",
     "${local.repo_root}/modules/dynamodb",
+    "${local.repo_root}/modules/lambda",
     "${local.repo_root}/modules/apigateway",
   ]
 }
