@@ -6,7 +6,7 @@ variable "AWS_REGION" {
   default = null
 }
 
-variable "ECR_REGISTRY" {
+variable "AMAZON_ECR_REGISTRY_URL" {
   default = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 }
 
@@ -24,11 +24,11 @@ group "default" {
 }
 
 target "connect-handler" {
-  tags       = ["${ECR_REGISTRY}/connect-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/connect-handler:${TAG}"]
   context    = "./src/connect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -38,11 +38,11 @@ target "connect-handler" {
 }
 
 target "disconnect-handler" {
-  tags       = ["${ECR_REGISTRY}/disconnect-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/disconnect-handler:${TAG}"]
   context    = "./src/disconnect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -52,11 +52,11 @@ target "disconnect-handler" {
 }
 
 target "default-handler" {
-  tags       = ["${ECR_REGISTRY}/default-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/default-handler:${TAG}"]
   context    = "./src/default_handler"
   dockerfile = "Dockerfile"
   target     = "app"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -66,11 +66,11 @@ target "default-handler" {
 }
 
 target "sendmessage-handler" {
-  tags       = ["${ECR_REGISTRY}/sendmessage-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/sendmessage-handler:${TAG}"]
   context    = "./src/sendmessage_handler"
   dockerfile = "Dockerfile"
   target     = "app"
-  platforms  = ["linux/amd64", "linux/arm64"]
+  platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
