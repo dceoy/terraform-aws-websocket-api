@@ -7,14 +7,24 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: docker
-    directory: /docker/
+    directories:
+      - /src/connect_handler/
+      - /src/default_handler/
+      - /src/disconnect_handler/
+      - /src/sendmessage_handler/
+      - /src/webhook_handler/
     schedule:
       interval: daily
     open-pull-requests-limit: 10
-  - package-ecosystem: terraform
+  - package-ecosystem: pip
     directories:
-      - /modules/kms/
-      - /modules/docker/
+      - /src/webhook_handler/
+    schedule:
+      interval: daily
+    versioning-strategy: increase-if-necessary
+    open-pull-requests-limit: 10
+  - package-ecosystem: terraform
+    directory: /modules/dynamodb/
     schedule:
       interval: daily
     open-pull-requests-limit: 10
