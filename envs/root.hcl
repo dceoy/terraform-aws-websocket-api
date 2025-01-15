@@ -11,6 +11,7 @@ locals {
     disconnect-handler  = "ws-disconnect-handler"
     sendmessage-handler = "ws-sendmessage-handler"
     default-handler     = "ws-default-handler"
+    webhook-handler     = "ws-webhook-handler"
   }
 }
 
@@ -57,9 +58,6 @@ EOF
 catalog {
   urls = [
     "github.com/dceoy/terraform-aws-crud-http-api",
-    "${local.repo_root}/modules/kms",
-    "${local.repo_root}/modules/ecr",
-    "${local.repo_root}/modules/docker",
     "${local.repo_root}/modules/dynamodb",
     "${local.repo_root}/modules/lambda",
     "${local.repo_root}/modules/apigateway",
@@ -89,6 +87,7 @@ inputs = {
     disconnect-handler  = "${local.repo_root}/disconnect_handler"
     sendmessage-handler = "${local.repo_root}/sendmessage_handler"
     default-handler     = "${local.repo_root}/default_handler"
+    webhook-handler     = "${local.repo_root}/webhook_handler"
   }
   docker_image_build_dockerfiles = {
     for k in keys(local.ecr_repository_names) : k => "Dockerfile"
