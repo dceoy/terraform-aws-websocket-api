@@ -20,5 +20,5 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/docker"
+  source = "git::https://github.com/dceoy/terraform-aws-crud-http-api.git//modules/docker?ref=main"
 }

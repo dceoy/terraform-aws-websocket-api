@@ -3,5 +3,5 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/kms"
+  source = "git::https://github.com/dceoy/terraform-aws-crud-http-api.git//modules/kms?ref=main"
 }

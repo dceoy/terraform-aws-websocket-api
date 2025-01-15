@@ -1,1 +1,1 @@
-../kms/version.tf
+../dynamodb/version.tf

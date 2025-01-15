@@ -56,8 +56,8 @@ EOF
 
 catalog {
   urls = [
+    "github.com/dceoy/terraform-aws-crud-http-api",
     "${local.repo_root}/modules/kms",
-    "${local.repo_root}/modules/account",
     "${local.repo_root}/modules/ecr",
     "${local.repo_root}/modules/docker",
     "${local.repo_root}/modules/dynamodb",
@@ -73,7 +73,7 @@ inputs = {
   kms_key_deletion_window_in_days          = 30
   kms_key_rotation_period_in_days          = 365
   ecr_repository_names                     = local.ecr_repository_names
-  ecr_image_secondary_tags                 = compact(split(",", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
+  ecr_image_secondary_tags                 = compact(split("\n", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability                 = "MUTABLE"
   ecr_force_delete                         = true
   ecr_lifecycle_policy_semver_image_count  = 9999

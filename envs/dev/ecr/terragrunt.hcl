@@ -3,5 +3,5 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/ecr"
+  source = "git::https://github.com/dceoy/terraform-aws-crud-http-api.git//modules/ecr?ref=main"
 }
