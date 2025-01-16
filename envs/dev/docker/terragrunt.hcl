@@ -6,10 +6,10 @@ dependency "ecr" {
   config_path = "../ecr"
   mock_outputs = {
     ecr_repository_urls = {
-      connect-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/connect-handler"
-      disconnect-handler  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/disconnect-handler"
-      sendmessage-handler = "123456789012.dkr.ecr.us-east-1.amazonaws.com/sendmessage-handler"
-      default-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/default-handler"
+      connect-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-connect-handler"
+      disconnect-handler  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-disconnect-handler"
+      sendmessage-handler = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-sendmessage-handler"
+      webhook-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-webhook-handler"
     }
   }
   mock_outputs_merge_strategy_with_state = "shallow"

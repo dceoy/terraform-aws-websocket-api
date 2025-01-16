@@ -20,8 +20,6 @@ dependency "lambda" {
     disconnect_handler_lambda_function_invoke_arn     = "arn:aws:lambda:us-east-1:123456789012:function:disconnect-handler:1"
     sendmessage_handler_lambda_function_qualified_arn = "arn:aws:lambda:us-east-1:123456789012:function:sendmessage-handler:1"
     sendmessage_handler_lambda_function_invoke_arn    = "arn:aws:lambda:us-east-1:123456789012:function:sendmessage-handler:1"
-    default_handler_lambda_function_qualified_arn     = "arn:aws:lambda:us-east-1:123456789012:function:default-handler:1"
-    default_handler_lambda_function_invoke_arn        = "arn:aws:lambda:us-east-1:123456789012:function:default-handler:1"
   }
   mock_outputs_merge_strategy_with_state = "shallow"
 }
@@ -34,8 +32,6 @@ inputs = {
   disconnect_handler_lambda_function_invoke_arn     = dependency.lambda.outputs.disconnect_handler_lambda_function_invoke_arn
   sendmessage_handler_lambda_function_qualified_arn = dependency.lambda.outputs.sendmessage_handler_lambda_function_qualified_arn
   sendmessage_handler_lambda_function_invoke_arn    = dependency.lambda.outputs.sendmessage_handler_lambda_function_invoke_arn
-  default_handler_lambda_function_qualified_arn     = dependency.lambda.outputs.default_handler_lambda_function_qualified_arn
-  default_handler_lambda_function_invoke_arn        = dependency.lambda.outputs.default_handler_lambda_function_invoke_arn
 }
 
 terraform {

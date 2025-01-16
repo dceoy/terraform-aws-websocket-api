@@ -9,7 +9,6 @@ updates:
   - package-ecosystem: docker
     directories:
       - /src/connect_handler/
-      - /src/default_handler/
       - /src/disconnect_handler/
       - /src/sendmessage_handler/
       - /src/webhook_handler/

@@ -55,13 +55,3 @@ variable "sendmessage_handler_lambda_function_invoke_arn" {
   description = "Lambda function invoke ARN of the sendmessage handler"
   type        = string
 }
-
-variable "default_handler_lambda_function_qualified_arn" {
-  description = "Lambda function qualified ARN of the default handler"
-  type        = string
-}
-
-variable "default_handler_lambda_function_invoke_arn" {
-  description = "Lambda function invoke ARN of the default handler"
-  type        = string
-}

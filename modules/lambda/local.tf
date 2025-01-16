@@ -9,7 +9,6 @@ locals {
     connect-handler     = var.connect_handler_lambda_image_uri
     disconnect-handler  = var.disconnect_handler_lambda_image_uri
     sendmessage-handler = var.sendmessage_handler_lambda_image_uri
-    default-handler     = var.default_handler_lambda_image_uri
     webhook-handler     = var.webhook_handler_lambda_image_uri
   }
   lambda_function_names = {

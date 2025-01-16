@@ -10,6 +10,27 @@ resource "aws_apigatewayv2_api" "websocket" {
   }
 }
 
+resource "aws_apigatewayv2_route" "connect" {
+  operation_name     = "${aws_apigatewayv2_api.websocket.name}-connect-route"
+  api_id             = aws_apigatewayv2_api.websocket.id
+  authorization_type = "NONE"
+  route_key          = "$connect"
+  target             = "integrations/${aws_apigatewayv2_integration.connect.id}"
+}
+
+resource "aws_apigatewayv2_integration" "connect" {
+  api_id           = aws_apigatewayv2_api.websocket.id
+  description      = "${aws_apigatewayv2_api.websocket.name}-connect-integration"
+  integration_type = "AWS_PROXY"
+  integration_uri  = var.connect_handler_lambda_function_invoke_arn
+}
+
+resource "aws_apigatewayv2_route_response" "connect_route_response" {
+  api_id             = aws_apigatewayv2_api.websocket.id
+  route_id           = aws_apigatewayv2_route.connect.id
+  route_response_key = "$default"
+}
+
 resource "aws_lambda_permission" "connect" {
   action        = "lambda:InvokeFunction"
   function_name = local.lambda_function_names["connect-handler"]
@@ -18,17 +39,19 @@ resource "aws_lambda_permission" "connect" {
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$connect"
 }
 
-resource "aws_apigatewayv2_integration" "connect" {
-  api_id           = aws_apigatewayv2_api.websocket.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = var.connect_handler_lambda_function_invoke_arn
-}
-
-resource "aws_apigatewayv2_route" "connect" {
+resource "aws_apigatewayv2_route" "disconnect" {
+  operation_name     = "${aws_apigatewayv2_api.websocket.name}-disconnect-route"
   api_id             = aws_apigatewayv2_api.websocket.id
   authorization_type = "NONE"
-  route_key          = "$connect"
-  target             = "integrations/${aws_apigatewayv2_integration.connect.id}"
+  route_key          = "$disconnect"
+  target             = "integrations/${aws_apigatewayv2_integration.disconnect.id}"
+}
+
+resource "aws_apigatewayv2_integration" "disconnect" {
+  api_id           = aws_apigatewayv2_api.websocket.id
+  description      = "${aws_apigatewayv2_api.websocket.name}-disconnect-integration"
+  integration_type = "AWS_PROXY"
+  integration_uri  = var.disconnect_handler_lambda_function_invoke_arn
 }
 
 resource "aws_lambda_permission" "disconnect" {
@@ -39,17 +62,56 @@ resource "aws_lambda_permission" "disconnect" {
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$disconnect"
 }
 
-resource "aws_apigatewayv2_integration" "disconnect" {
-  api_id           = aws_apigatewayv2_api.websocket.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = var.disconnect_handler_lambda_function_invoke_arn
-}
-
-resource "aws_apigatewayv2_route" "disconnect" {
+resource "aws_apigatewayv2_route" "default" {
+  operation_name     = "${aws_apigatewayv2_api.websocket.name}-default-route"
   api_id             = aws_apigatewayv2_api.websocket.id
   authorization_type = "NONE"
-  route_key          = "$disconnect"
-  target             = "integrations/${aws_apigatewayv2_integration.disconnect.id}"
+  route_key          = "$default"
+  target             = "integrations/${aws_apigatewayv2_integration.default.id}"
+}
+
+resource "aws_apigatewayv2_integration" "default" {
+  api_id           = aws_apigatewayv2_api.websocket.id
+  description      = "${aws_apigatewayv2_api.websocket.name}-default-integration"
+  integration_type = "MOCK"
+  request_templates = {
+    "200" = jsonencode({
+      statusCode = 200
+    })
+  }
+  template_selection_expression = "200"
+  passthrough_behavior          = "WHEN_NO_MATCH"
+}
+
+resource "aws_apigatewayv2_integration_response" "default" {
+  api_id                   = aws_apigatewayv2_api.websocket.id
+  integration_id           = aws_apigatewayv2_integration.default.id
+  integration_response_key = "$default"
+  response_templates = {
+    "200" = "This is a mock response."
+  }
+  template_selection_expression = "200"
+}
+
+resource "aws_apigatewayv2_route_response" "default" {
+  api_id             = aws_apigatewayv2_api.websocket.id
+  route_id           = aws_apigatewayv2_route.default.id
+  route_response_key = "$default"
+}
+
+resource "aws_apigatewayv2_route" "sendmessage" {
+  operation_name     = "${aws_apigatewayv2_api.websocket.name}-sendmessage-route"
+  api_id             = aws_apigatewayv2_api.websocket.id
+  authorization_type = "NONE"
+  route_key          = "sendmessage"
+  target             = "integrations/${aws_apigatewayv2_integration.sendmessage.id}"
+}
+
+resource "aws_apigatewayv2_integration" "sendmessage" {
+  api_id           = aws_apigatewayv2_api.websocket.id
+  description      = "${aws_apigatewayv2_api.websocket.name}-sendmessage-integration"
+  integration_type = "AWS_PROXY"
+  integration_uri  = var.sendmessage_handler_lambda_function_invoke_arn
 }
 
 resource "aws_lambda_permission" "sendmessage" {
@@ -58,40 +120,6 @@ resource "aws_lambda_permission" "sendmessage" {
   qualifier     = local.lambda_function_versions["sendmessage-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*sendmessage"
-}
-
-resource "aws_apigatewayv2_integration" "sendmessage" {
-  api_id           = aws_apigatewayv2_api.websocket.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = var.sendmessage_handler_lambda_function_invoke_arn
-}
-
-resource "aws_apigatewayv2_route" "sendmessage" {
-  api_id             = aws_apigatewayv2_api.websocket.id
-  authorization_type = "NONE"
-  route_key          = "sendmessage"
-  target             = "integrations/${aws_apigatewayv2_integration.sendmessage.id}"
-}
-
-resource "aws_lambda_permission" "default" {
-  action        = "lambda:InvokeFunction"
-  function_name = local.lambda_function_names["default-handler"]
-  qualifier     = local.lambda_function_versions["default-handler"]
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$default"
-}
-
-resource "aws_apigatewayv2_integration" "default" {
-  api_id           = aws_apigatewayv2_api.websocket.id
-  integration_type = "AWS_PROXY"
-  integration_uri  = var.default_handler_lambda_function_invoke_arn
-}
-
-resource "aws_apigatewayv2_route" "default" {
-  api_id             = aws_apigatewayv2_api.websocket.id
-  authorization_type = "NONE"
-  route_key          = "$default"
-  target             = "integrations/${aws_apigatewayv2_integration.default.id}"
 }
 
 # trivy:ignore:avd-aws-0017

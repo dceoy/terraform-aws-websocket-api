@@ -18,7 +18,6 @@ group "default" {
   targets = [
     "connect-handler",
     "disconnect-handler",
-    "default-handler",
     "sendmessage-handler",
     "webhook-handler"
   ]
@@ -41,20 +40,6 @@ target "connect-handler" {
 target "disconnect-handler" {
   tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-disconnect-handler:${TAG}"]
   context    = "./src/disconnect_handler"
-  dockerfile = "Dockerfile"
-  target     = "app"
-  platforms  = ["linux/arm64"]
-  cache_from = ["type=gha"]
-  cache_to   = ["type=gha,mode=max"]
-  pull       = true
-  push       = false
-  load       = true
-  provenance = false
-}
-
-target "default-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-default-handler:${TAG}"]
-  context    = "./src/default_handler"
   dockerfile = "Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]

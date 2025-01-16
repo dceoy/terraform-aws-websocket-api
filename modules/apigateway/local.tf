@@ -9,7 +9,6 @@ locals {
     connect-handler     = var.connect_handler_lambda_function_qualified_arn
     disconnect-handler  = var.disconnect_handler_lambda_function_qualified_arn
     sendmessage-handler = var.sendmessage_handler_lambda_function_qualified_arn
-    default-handler     = var.default_handler_lambda_function_qualified_arn
   }
   lambda_function_names = {
     for k, v in local.lambda_function_qualified_arns : k => split(":", v)[6]

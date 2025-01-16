@@ -50,12 +50,6 @@ variable "sendmessage_handler_lambda_image_uri" {
   default     = null
 }
 
-variable "default_handler_lambda_image_uri" {
-  description = "Container image URI for the default handler"
-  type        = string
-  default     = null
-}
-
 variable "webhook_handler_lambda_image_uri" {
   description = "Container image URI for the webhook handler"
   type        = string

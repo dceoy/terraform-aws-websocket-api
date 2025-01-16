@@ -15,10 +15,10 @@ dependency "docker" {
   config_path = "../docker"
   mock_outputs = {
     docker_registry_primary_image_uris = {
-      connect-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/connect-handler:latest"
-      disconnect-handler  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/disconnect-handler:latest"
-      sendmessage-handler = "123456789012.dkr.ecr.us-east-1.amazonaws.com/sendmessage-handler:latest"
-      default-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/default-handler:latest"
+      connect-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-connect-handler:latest"
+      disconnect-handler  = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-disconnect-handler:latest"
+      sendmessage-handler = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-sendmessage-handler:latest"
+      webhook-handler     = "123456789012.dkr.ecr.us-east-1.amazonaws.com/ws-webhook-handler:latest"
     }
   }
   mock_outputs_merge_strategy_with_state = "shallow"
@@ -37,7 +37,6 @@ inputs = {
   connect_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["connect-handler"]
   disconnect_handler_lambda_image_uri  = dependency.docker.outputs.docker_registry_primary_image_uris["disconnect-handler"]
   sendmessage_handler_lambda_image_uri = dependency.docker.outputs.docker_registry_primary_image_uris["sendmessage-handler"]
-  default_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["default-handler"]
   webhook_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["webhook-handler"]
   lambda_environment_variables = {
     for k in keys(include.root.locals.ecr_repository_names) : k => {

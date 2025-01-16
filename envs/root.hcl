@@ -10,7 +10,6 @@ locals {
     connect-handler     = "ws-connect-handler"
     disconnect-handler  = "ws-disconnect-handler"
     sendmessage-handler = "ws-sendmessage-handler"
-    default-handler     = "ws-default-handler"
     webhook-handler     = "ws-webhook-handler"
   }
 }
@@ -86,7 +85,6 @@ inputs = {
     connect-handler     = "${local.repo_root}/connect_handler"
     disconnect-handler  = "${local.repo_root}/disconnect_handler"
     sendmessage-handler = "${local.repo_root}/sendmessage_handler"
-    default-handler     = "${local.repo_root}/default_handler"
     webhook-handler     = "${local.repo_root}/webhook_handler"
   }
   docker_image_build_dockerfiles = {

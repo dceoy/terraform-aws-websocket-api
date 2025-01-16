@@ -218,29 +218,3 @@ resource "aws_iam_role_policy" "messages" {
     ]
   })
 }
-
-resource "aws_iam_role_policy" "data" {
-  for_each = toset(["default-handler"])
-  name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-data-iam-policy"
-  role     = aws_iam_role.functions[each.key].id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AllowAPIAccess"
-        Effect = "Allow"
-        Action = ["execute-api:ManageConnections"]
-        Resource = [
-          "arn:aws:execute-api:${local.region}:${local.account_id}:*/*/POST/@connections/*",
-          "arn:aws:execute-api:${local.region}:${local.account_id}:*/*/GET/@connections/*"
-        ]
-        Condition = {
-          StringEquals = {
-            "aws:ResourceTag/SystemName" = var.system_name
-            "aws:ResourceTag/EnvType"    = var.env_type
-          }
-        }
-      }
-    ]
-  })
-}
