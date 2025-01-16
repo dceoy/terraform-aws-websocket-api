@@ -1,1 +1,1 @@
-../dynamodb/version.tf
+../lambda/version.tf

@@ -23,7 +23,7 @@ updates:
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 10
   - package-ecosystem: terraform
-    directory: /modules/dynamodb/
+    directory: /modules/lambda/
     schedule:
       interval: daily
     open-pull-requests-limit: 10

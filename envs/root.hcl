@@ -93,14 +93,15 @@ inputs = {
   docker_image_build_build_args = {
     for k in keys(local.ecr_repository_names) : k => {}
   }
-  docker_image_build_platform             = local.docker_image_build_platforms[local.lambda_architecture]
-  docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
-  docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
-  dynamodb_hash_key_for_connection_table  = "connectionId"
-  dynamodb_billing_mode                   = "PAY_PER_REQUEST"
-  dynamodb_point_in_time_recovery_enabled = false
-  dynamodb_table_class                    = "STANDARD"
-  lambda_architectures                    = [local.lambda_architecture]
+  docker_image_build_platform                   = local.docker_image_build_platforms[local.lambda_architecture]
+  docker_image_primary_tag                      = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
+  docker_host                                   = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
+  dynamodb_table_name                           = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-websocket-dynamodb-table"
+  dynamodb_table_hash_key                       = "connectionId"
+  dynamodb_table_billing_mode                   = "PAY_PER_REQUEST"
+  dynamodb_table_point_in_time_recovery_enabled = false
+  dynamodb_table_class                          = "STANDARD"
+  lambda_architectures                          = [local.lambda_architecture]
   lambda_memory_sizes = {
     for k in keys(local.ecr_repository_names) : k => 128
   }

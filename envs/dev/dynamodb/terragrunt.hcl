@@ -16,5 +16,5 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/dynamodb"
+  source = "git::https://github.com/dceoy/terraform-aws-crud-http-api.git//modules/dynamodb?ref=main"
 }
