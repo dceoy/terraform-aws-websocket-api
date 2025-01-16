@@ -19,12 +19,13 @@ group "default" {
     "connect-handler",
     "disconnect-handler",
     "default-handler",
-    "sendmessage-handler"
+    "sendmessage-handler",
+    "webhook-handler"
   ]
 }
 
 target "connect-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/connect-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-connect-handler:${TAG}"]
   context    = "./src/connect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -38,7 +39,7 @@ target "connect-handler" {
 }
 
 target "disconnect-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/disconnect-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-disconnect-handler:${TAG}"]
   context    = "./src/disconnect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -52,7 +53,7 @@ target "disconnect-handler" {
 }
 
 target "default-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/default-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-default-handler:${TAG}"]
   context    = "./src/default_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -66,8 +67,22 @@ target "default-handler" {
 }
 
 target "sendmessage-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/sendmessage-handler:${TAG}"]
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-sendmessage-handler:${TAG}"]
   context    = "./src/sendmessage_handler"
+  dockerfile = "Dockerfile"
+  target     = "app"
+  platforms  = ["linux/arm64"]
+  cache_from = ["type=gha"]
+  cache_to   = ["type=gha,mode=max"]
+  pull       = true
+  push       = false
+  load       = true
+  provenance = false
+}
+
+target "webhook-handler" {
+  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-webhook-handler:${TAG}"]
+  context    = "./src/webhook_handler"
   dockerfile = "Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]

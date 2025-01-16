@@ -61,8 +61,15 @@ resource "aws_cloudwatch_log_group" "functions" {
 resource "aws_lambda_provisioned_concurrency_config" "functions" {
   for_each                          = var.lambda_provisioned_concurrent_executions > -1 && length(aws_lambda_function.functions) > 0 ? aws_lambda_function.functions : {}
   function_name                     = each.value.function_name
-  qualifier                         = each.value.version
+  qualifier                         = each.value.version == "$LATEST" ? null : each.value.version
   provisioned_concurrent_executions = var.lambda_provisioned_concurrent_executions
+}
+
+resource "aws_lambda_function_url" "api" {
+  function_name      = aws_lambda_function.functions["webhook-handler"].function_name
+  qualifier          = aws_lambda_function.functions["webhook-handler"].version == "$LATEST" ? null : aws_lambda_function.functions["webhook-handler"].version
+  authorization_type = var.lambda_function_url_authorization_type
+  invoke_mode        = var.lambda_function_url_invoke_mode
 }
 
 resource "aws_iam_role" "functions" {

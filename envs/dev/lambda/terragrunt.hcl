@@ -38,6 +38,7 @@ inputs = {
   disconnect_handler_lambda_image_uri  = dependency.docker.outputs.docker_registry_primary_image_uris["disconnect-handler"]
   sendmessage_handler_lambda_image_uri = dependency.docker.outputs.docker_registry_primary_image_uris["sendmessage-handler"]
   default_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["default-handler"]
+  webhook_handler_lambda_image_uri     = dependency.docker.outputs.docker_registry_primary_image_uris["webhook-handler"]
   lambda_environment_variables = {
     for k in keys(include.root.locals.ecr_repository_names) : k => {
       CONNECTION_DYNAMODB_TABLE_NAME = dependency.dynamodb.outputs.connection_dynamodb_table_id

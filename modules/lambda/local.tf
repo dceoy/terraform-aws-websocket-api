@@ -10,6 +10,7 @@ locals {
     disconnect-handler  = var.disconnect_handler_lambda_image_uri
     sendmessage-handler = var.sendmessage_handler_lambda_image_uri
     default-handler     = var.default_handler_lambda_image_uri
+    webhook-handler     = var.webhook_handler_lambda_image_uri
   }
   lambda_function_names = {
     for k, v in local.lambda_image_uris : k => split(":", split("/", v)[length(split("/", v)) - 1])[0]

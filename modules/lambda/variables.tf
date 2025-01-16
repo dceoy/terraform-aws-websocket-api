@@ -56,6 +56,12 @@ variable "default_handler_lambda_image_uri" {
   default     = null
 }
 
+variable "webhook_handler_lambda_image_uri" {
+  description = "Container image URI for the webhook handler"
+  type        = string
+  default     = null
+}
+
 variable "lambda_architectures" {
   description = "Lambda instruction set architectures"
   type        = list(string)
@@ -173,5 +179,25 @@ variable "lambda_provisioned_concurrent_executions" {
   validation {
     condition     = var.lambda_provisioned_concurrent_executions == -1 || var.lambda_provisioned_concurrent_executions >= 0
     error_message = "Lambda provisioned concurrent executions must be -1 or greater"
+  }
+}
+
+variable "lambda_function_url_authorization_type" {
+  description = "Lambda function URL authorization type"
+  type        = string
+  default     = "NONE"
+  validation {
+    condition     = var.lambda_function_url_authorization_type == "NONE" || var.lambda_function_url_authorization_type == "AWS_IAM"
+    error_message = "Lambda function URL authorization type must be either NONE or AWS_IAM"
+  }
+}
+
+variable "lambda_function_url_invoke_mode" {
+  description = "Lambda function URL invoke mode"
+  type        = string
+  default     = "BUFFERED"
+  validation {
+    condition     = var.lambda_function_url_invoke_mode == "BUFFERED" || var.lambda_function_url_invoke_mode == "RESPONSE_STREAM"
+    error_message = "Lambda function URL invoke mode must be either BUFFERED or RESPONSE_STREAM"
   }
 }
