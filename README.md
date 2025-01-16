@@ -22,7 +22,7 @@ Installation
 4.  Build the Docker images.
 
     ```sh
-    $ ./build_docker_images.sh
+    $ ./docker_buildx_bake.sh
     ```
 
 5.  Initialize Terraform working directories.

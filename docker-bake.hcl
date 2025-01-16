@@ -1,17 +1,13 @@
-variable "AWS_ACCOUNT_ID" {
-  default = null
-}
-
-variable "AWS_REGION" {
-  default = null
-}
-
-variable "AMAZON_ECR_REGISTRY_URL" {
-  default = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+variable "REGISTRY" {
+  default = "123456789012.dkr.ecr.us-east-1.amazonaws.com"
 }
 
 variable "TAG" {
   default = "latest"
+}
+
+variable "PYTHON_VERSION" {
+  default = "3.13"
 }
 
 group "default" {
@@ -24,7 +20,7 @@ group "default" {
 }
 
 target "connect-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-connect-handler:${TAG}"]
+  tags       = ["${REGISTRY}/ws-connect-handler:${TAG}"]
   context    = "./src/connect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -38,7 +34,7 @@ target "connect-handler" {
 }
 
 target "disconnect-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-disconnect-handler:${TAG}"]
+  tags       = ["${REGISTRY}/ws-disconnect-handler:${TAG}"]
   context    = "./src/disconnect_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -52,7 +48,7 @@ target "disconnect-handler" {
 }
 
 target "sendmessage-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-sendmessage-handler:${TAG}"]
+  tags       = ["${REGISTRY}/ws-sendmessage-handler:${TAG}"]
   context    = "./src/sendmessage_handler"
   dockerfile = "Dockerfile"
   target     = "app"
@@ -66,7 +62,7 @@ target "sendmessage-handler" {
 }
 
 target "webhook-handler" {
-  tags       = ["${AMAZON_ECR_REGISTRY_URL}/ws-webhook-handler:${TAG}"]
+  tags       = ["${REGISTRY}/ws-webhook-handler:${TAG}"]
   context    = "./src/webhook_handler"
   dockerfile = "Dockerfile"
   target     = "app"
