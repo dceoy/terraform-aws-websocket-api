@@ -39,10 +39,10 @@ def handle_incoming_call() -> dict[str, Any]:
     # <Say> punctuation to improve text-to-speech flow
     response.say(
         "Please wait while we connect your call to the AI voice assistant,"
-        " powered by Twilio and the Open-AI Realtime API"
+        " powered by Twilio and the OpenAI Realtime API"
     )
     response.pause(length=1)
-    response.say("O.K. you can start talking!")
+    response.say("OK. you can start talking!")
     connect = Connect()
     connect.stream(url=os.environ.get("WEBSOCKET_MEDIA_STREAM_URL"))
     response.append(connect)

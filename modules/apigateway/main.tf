@@ -1,8 +1,10 @@
 resource "aws_apigatewayv2_api" "websocket" {
-  name                       = "${var.system_name}-${var.env_type}-websocket-api-gateway"
-  description                = "${var.system_name}-${var.env_type}-websocket-api-gateway"
-  protocol_type              = "WEBSOCKET"
-  route_selection_expression = "$request.body.action"
+  name                         = "${var.system_name}-${var.env_type}-websocket-api-gateway"
+  description                  = "WebSocket API Gateway for ${var.system_name}-${var.env_type}"
+  protocol_type                = "WEBSOCKET"
+  route_selection_expression   = "$request.body.action"
+  version                      = var.apigateway_api_version
+  api_key_selection_expression = var.apigateway_api_key_selection_expression
   tags = {
     Name       = "${var.system_name}-${var.env_type}-websocket-api-gateway"
     SystemName = var.system_name

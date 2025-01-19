@@ -55,3 +55,23 @@ variable "sendmessage_handler_lambda_function_invoke_arn" {
   description = "Lambda function invoke ARN of the sendmessage handler"
   type        = string
 }
+
+variable "apigateway_api_version" {
+  description = "Version identifier for the API Gateway"
+  type        = string
+  default     = null
+  validation {
+    condition     = length(var.apigateway_api_version) <= 64
+    error_message = "Version identifier for the API Gateway must be between 1 and 64 characters in length"
+  }
+}
+
+variable "apigateway_api_key_selection_expression" {
+  description = "API key selection expression for the API Gateway"
+  type        = string
+  default     = "$request.header.x-api-key"
+  validation {
+    condition     = contains(["$context.authorizer.usageIdentifierKey", "$request.header.x-api-key"], var.apigateway_api_key_selection_expression)
+    error_message = "An API key selection expression must be either $context.authorizer.usageIdentifierKey or $request.header.x-api-key"
+  }
+}
