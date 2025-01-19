@@ -25,6 +25,9 @@ resource "aws_apigatewayv2_integration" "connect" {
   description      = "${aws_apigatewayv2_api.websocket.name}-connect-integration"
   integration_type = "AWS_PROXY"
   integration_uri  = var.connect_handler_lambda_function_invoke_arn
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_route_response" "connect_route_response" {
@@ -39,6 +42,9 @@ resource "aws_lambda_permission" "connect" {
   qualifier     = local.lambda_function_versions["connect-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$connect"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_route" "disconnect" {
@@ -54,6 +60,9 @@ resource "aws_apigatewayv2_integration" "disconnect" {
   description      = "${aws_apigatewayv2_api.websocket.name}-disconnect-integration"
   integration_type = "AWS_PROXY"
   integration_uri  = var.disconnect_handler_lambda_function_invoke_arn
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lambda_permission" "disconnect" {
@@ -62,6 +71,9 @@ resource "aws_lambda_permission" "disconnect" {
   qualifier     = local.lambda_function_versions["disconnect-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*$disconnect"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_route" "default" {
@@ -83,6 +95,9 @@ resource "aws_apigatewayv2_integration" "default" {
   }
   template_selection_expression = "200"
   passthrough_behavior          = "WHEN_NO_MATCH"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_integration_response" "default" {
@@ -114,6 +129,9 @@ resource "aws_apigatewayv2_integration" "media" {
   description      = "${aws_apigatewayv2_api.websocket.name}-media-integration"
   integration_type = "AWS_PROXY"
   integration_uri  = var.media_handler_lambda_function_invoke_arn
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_lambda_permission" "media" {
@@ -122,6 +140,9 @@ resource "aws_lambda_permission" "media" {
   qualifier     = local.lambda_function_versions["media-handler"]
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*media"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # trivy:ignore:avd-aws-0017
