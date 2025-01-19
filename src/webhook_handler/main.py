@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 import os
+from http import HTTPStatus
 from typing import Any
 
 from aws_lambda_powertools import Logger, Tracer
-from aws_lambda_powertools.event_handler import LambdaFunctionUrlResolver
+from aws_lambda_powertools.event_handler import (
+    LambdaFunctionUrlResolver,
+    Response,
+)
 from aws_lambda_powertools.event_handler.exceptions import BadRequestError
 from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -24,7 +28,7 @@ def index_page():
 
 @app.post("/incoming-call")
 @tracer.capture_method
-def handle_incoming_call() -> dict[str, Any]:
+def handle_incoming_call() -> Response:
     """Handle incoming call and return TwiML response to connect to Media Stream.
 
     Args:
@@ -44,13 +48,13 @@ def handle_incoming_call() -> dict[str, Any]:
     response.pause(length=1)
     response.say("OK. you can start talking!")
     connect = Connect()
-    connect.stream(url=os.environ.get("WEBSOCKET_MEDIA_STREAM_URL"))
+    connect.stream(url=os.environ["WEBSOCKET_MEDIA_API_URL"])
     response.append(connect)
-    return {
-        "statusCode": 200,
-        "headers": {"Content-Type": "application/xml"},
-        "body": str(response),
-    }
+    return Response(
+        status_code=HTTPStatus.OK,  # 200
+        content_type="application/xml",
+        body=str(response),
+    )
 
 
 def _validate_twilio_signature() -> None:
@@ -69,7 +73,7 @@ def _validate_twilio_signature() -> None:
         name="X-Twilio-Signature",
         case_sensitive=True,
     )
-    validator = RequestValidator(os.environ.get("TWILIO_AUTH_TOKEN"))
+    validator = RequestValidator(os.environ["TWILIO_AUTH_TOKEN"])
     if not validator.validate(uri=uri, params=params, signature=signature):
         raise BadRequestError("Invalid Twilio request signature")
 

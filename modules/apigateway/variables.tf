@@ -46,13 +46,13 @@ variable "disconnect_handler_lambda_function_invoke_arn" {
   type        = string
 }
 
-variable "sendmessage_handler_lambda_function_qualified_arn" {
-  description = "Lambda function qualified ARN of the sendmessage handler"
+variable "media_handler_lambda_function_qualified_arn" {
+  description = "Lambda function qualified ARN of the media handler"
   type        = string
 }
 
-variable "sendmessage_handler_lambda_function_invoke_arn" {
-  description = "Lambda function invoke ARN of the sendmessage handler"
+variable "media_handler_lambda_function_invoke_arn" {
+  description = "Lambda function invoke ARN of the media handler"
   type        = string
 }
 

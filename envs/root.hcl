@@ -7,10 +7,10 @@ locals {
   repo_root = get_repo_root()
   env_vars  = read_terragrunt_config(find_in_parent_folders("env.hcl"))
   ecr_repository_names = {
-    connect-handler     = "ws-connect-handler"
-    disconnect-handler  = "ws-disconnect-handler"
-    sendmessage-handler = "ws-sendmessage-handler"
-    webhook-handler     = "ws-webhook-handler"
+    connect-handler    = "ws-connect-handler"
+    disconnect-handler = "ws-disconnect-handler"
+    media-handler      = "ws-media-handler"
+    webhook-handler    = "ws-webhook-handler"
   }
 }
 
@@ -81,10 +81,10 @@ inputs = {
     for k in keys(local.ecr_repository_names) : k => "app"
   }
   docker_image_build_contexts = {
-    connect-handler     = "${local.repo_root}/connect_handler"
-    disconnect-handler  = "${local.repo_root}/disconnect_handler"
-    sendmessage-handler = "${local.repo_root}/sendmessage_handler"
-    webhook-handler     = "${local.repo_root}/webhook_handler"
+    connect-handler    = "${local.repo_root}/connect_handler"
+    disconnect-handler = "${local.repo_root}/disconnect_handler"
+    media-handler      = "${local.repo_root}/media_handler"
+    webhook-handler    = "${local.repo_root}/webhook_handler"
   }
   docker_image_build_dockerfiles = {
     for k in keys(local.ecr_repository_names) : k => "Dockerfile"

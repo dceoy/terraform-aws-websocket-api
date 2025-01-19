@@ -6,9 +6,9 @@ locals {
   account_id = data.aws_caller_identity.current.account_id
   region     = data.aws_region.current.name
   lambda_function_qualified_arns = {
-    connect-handler     = var.connect_handler_lambda_function_qualified_arn
-    disconnect-handler  = var.disconnect_handler_lambda_function_qualified_arn
-    sendmessage-handler = var.sendmessage_handler_lambda_function_qualified_arn
+    connect-handler    = var.connect_handler_lambda_function_qualified_arn
+    disconnect-handler = var.disconnect_handler_lambda_function_qualified_arn
+    media-handler      = var.media_handler_lambda_function_qualified_arn
   }
   lambda_function_names = {
     for k, v in local.lambda_function_qualified_arns : k => split(":", v)[6]

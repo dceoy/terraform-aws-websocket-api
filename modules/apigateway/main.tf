@@ -101,27 +101,27 @@ resource "aws_apigatewayv2_route_response" "default" {
   route_response_key = "$default"
 }
 
-resource "aws_apigatewayv2_route" "sendmessage" {
-  operation_name     = "${aws_apigatewayv2_api.websocket.name}-sendmessage-route"
+resource "aws_apigatewayv2_route" "media" {
+  operation_name     = "${aws_apigatewayv2_api.websocket.name}-media-route"
   api_id             = aws_apigatewayv2_api.websocket.id
   authorization_type = "NONE"
-  route_key          = "sendmessage"
-  target             = "integrations/${aws_apigatewayv2_integration.sendmessage.id}"
+  route_key          = "media"
+  target             = "integrations/${aws_apigatewayv2_integration.media.id}"
 }
 
-resource "aws_apigatewayv2_integration" "sendmessage" {
+resource "aws_apigatewayv2_integration" "media" {
   api_id           = aws_apigatewayv2_api.websocket.id
-  description      = "${aws_apigatewayv2_api.websocket.name}-sendmessage-integration"
+  description      = "${aws_apigatewayv2_api.websocket.name}-media-integration"
   integration_type = "AWS_PROXY"
-  integration_uri  = var.sendmessage_handler_lambda_function_invoke_arn
+  integration_uri  = var.media_handler_lambda_function_invoke_arn
 }
 
-resource "aws_lambda_permission" "sendmessage" {
+resource "aws_lambda_permission" "media" {
   action        = "lambda:InvokeFunction"
-  function_name = local.lambda_function_names["sendmessage-handler"]
-  qualifier     = local.lambda_function_versions["sendmessage-handler"]
+  function_name = local.lambda_function_names["media-handler"]
+  qualifier     = local.lambda_function_versions["media-handler"]
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*sendmessage"
+  source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*media"
 }
 
 # trivy:ignore:avd-aws-0017

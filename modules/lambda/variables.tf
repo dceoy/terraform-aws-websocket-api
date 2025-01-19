@@ -44,8 +44,8 @@ variable "disconnect_handler_lambda_image_uri" {
   default     = null
 }
 
-variable "sendmessage_handler_lambda_image_uri" {
-  description = "Container image URI for the sendmessage handler"
+variable "media_handler_lambda_image_uri" {
+  description = "Container image URI for the media handler"
   type        = string
   default     = null
 }

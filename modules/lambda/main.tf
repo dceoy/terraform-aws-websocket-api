@@ -187,7 +187,7 @@ resource "aws_iam_role_policy" "connections" {
 }
 
 resource "aws_iam_role_policy" "messages" {
-  for_each = toset(["sendmessage-handler"])
+  for_each = toset(["media-handler"])
   name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-messages-iam-policy"
   role     = aws_iam_role.functions[each.key].id
   policy = jsonencode({

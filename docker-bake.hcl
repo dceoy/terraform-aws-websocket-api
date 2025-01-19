@@ -26,7 +26,7 @@ group "default" {
   targets = [
     "connect-handler",
     "disconnect-handler",
-    "sendmessage-handler",
+    "media-handler",
     "webhook-handler"
   ]
 }
@@ -59,9 +59,9 @@ target "disconnect-handler" {
   provenance = false
 }
 
-target "sendmessage-handler" {
-  tags       = ["${REGISTRY}/ws-sendmessage-handler:${TAG}"]
-  context    = "./src/sendmessage_handler"
+target "media-handler" {
+  tags       = ["${REGISTRY}/ws-media-handler:${TAG}"]
+  context    = "./src/media_handler"
   dockerfile = "Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]

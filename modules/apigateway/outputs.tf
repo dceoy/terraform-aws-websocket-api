@@ -38,14 +38,14 @@ output "apigateway_default_integration_id" {
   value       = aws_apigatewayv2_integration.default.id
 }
 
-output "apigateway_sendmessage_route_id" {
-  description = "API Gateway route ID for sendmessage route"
-  value       = aws_apigatewayv2_route.sendmessage.id
+output "apigateway_media_route_id" {
+  description = "API Gateway route ID for media route"
+  value       = aws_apigatewayv2_route.media.id
 }
 
-output "apigateway_sendmessage_integration_id" {
-  description = "API Gateway integration ID for sendmessage route"
-  value       = aws_apigatewayv2_integration.sendmessage.id
+output "apigateway_media_integration_id" {
+  description = "API Gateway integration ID for media route"
+  value       = aws_apigatewayv2_integration.media.id
 }
 
 output "apigateway_api_stage_id" {
