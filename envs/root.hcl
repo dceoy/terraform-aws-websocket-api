@@ -57,7 +57,6 @@ generate "provider" {
 catalog {
   urls = [
     "github.com/dceoy/terraform-aws-crud-http-api",
-    "${local.repo_root}/modules/dynamodb",
     "${local.repo_root}/modules/lambda",
     "${local.repo_root}/modules/apigateway",
   ]
@@ -97,10 +96,12 @@ inputs = {
   docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
   docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
   dynamodb_name                           = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-websocket-dynamodb-table"
-  dynamodb_hash_key                       = "connectionId"
   dynamodb_billing_mode                   = "PAY_PER_REQUEST"
+  dynamodb_hash_key                       = "connectionId"
+  dynamodb_stream_enabled                 = false
+  dynamodb_table_class                    = "STANDARD"
+  dynamodb_attributes                     = { connectionId = "S" }
   dynamodb_point_in_time_recovery_enabled = false
-  dynamodb_class                          = "STANDARD"
   lambda_architectures                    = [local.lambda_architecture]
   lambda_memory_sizes = {
     for k in keys(local.ecr_repository_names) : k => 128

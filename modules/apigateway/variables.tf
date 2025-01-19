@@ -60,10 +60,6 @@ variable "apigateway_api_version" {
   description = "Version identifier for the API Gateway"
   type        = string
   default     = null
-  validation {
-    condition     = length(var.apigateway_api_version) <= 64
-    error_message = "Version identifier for the API Gateway must be between 1 and 64 characters in length"
-  }
 }
 
 variable "apigateway_api_key_selection_expression" {

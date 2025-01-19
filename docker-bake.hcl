@@ -10,6 +10,18 @@ variable "PYTHON_VERSION" {
   default = "3.13"
 }
 
+variable "USER_UID" {
+  default = 1001
+}
+
+variable "USER_GID" {
+  default = 1001
+}
+
+variable "USER_NAME" {
+  default = "lambda"
+}
+
 group "default" {
   targets = [
     "connect-handler",
