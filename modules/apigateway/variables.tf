@@ -68,6 +68,6 @@ variable "apigateway_api_key_selection_expression" {
   default     = "$request.header.x-api-key"
   validation {
     condition     = contains(["$context.authorizer.usageIdentifierKey", "$request.header.x-api-key"], var.apigateway_api_key_selection_expression)
-    error_message = "An API key selection expression must be either $context.authorizer.usageIdentifierKey or $request.header.x-api-key"
+    error_message = "API key selection expression must be either $context.authorizer.usageIdentifierKey or $request.header.x-api-key"
   }
 }

@@ -118,6 +118,45 @@ resource "aws_iam_role_policy_attachments_exclusive" "functions" {
   ]
 }
 
+resource "aws_iam_role_policy" "parameters" {
+  for_each = aws_iam_role.functions
+  name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-parameters-iam-policy"
+  role     = each.value.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = concat(
+      [
+        {
+          Sid      = "AllowParameterStoreAccess"
+          Effect   = "Allow"
+          Action   = [
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath"
+          ]
+          Resource = ["*"]
+          Condition = {
+            StringEquals = {
+              "ssm:resourceTag/SystemName" = var.system_name
+              "ssm:resourceTag/EnvType"    = var.env_type
+            }
+          }
+        }
+      ],
+      (
+        var.kms_key_arn != null ? [
+          {
+            Sid      = "AllowKMSDecrypt"
+            Effect   = "Allow"
+            Action   = ["kms:Decrypt"]
+            Resource = [var.kms_key_arn]
+          }
+        ] : []
+      )
+    )
+  })
+}
+
 resource "aws_iam_role_policy" "logs" {
   for_each = aws_iam_role.functions
   name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-logs-iam-policy"
@@ -186,9 +225,9 @@ resource "aws_iam_role_policy" "connections" {
   })
 }
 
-resource "aws_iam_role_policy" "messages" {
+resource "aws_iam_role_policy" "media" {
   for_each = toset(["media-handler"])
-  name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-messages-iam-policy"
+  name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-media-iam-policy"
   role     = aws_iam_role.functions[each.key].id
   policy = jsonencode({
     Version = "2012-10-17"
