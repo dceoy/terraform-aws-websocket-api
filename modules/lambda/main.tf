@@ -127,9 +127,9 @@ resource "aws_iam_role_policy" "parameters" {
     Statement = concat(
       [
         {
-          Sid      = "AllowParameterStoreAccess"
-          Effect   = "Allow"
-          Action   = [
+          Sid    = "AllowParameterStoreAccess"
+          Effect = "Allow"
+          Action = [
             "ssm:GetParameter",
             "ssm:GetParameters",
             "ssm:GetParametersByPath"

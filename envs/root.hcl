@@ -119,7 +119,5 @@ inputs = {
   lambda_logging_config_shadow_log_level      = "INFO"
   lambda_tracing_config_mode                  = "Active"
   lambda_provisioned_concurrent_executions    = -1
-  ssm_securestring_parameters = {
-    twilio-auth-token = get_env("TWILIO_AUTH_TOKEN", "")
-  }
+  twilio_auth_token                           = get_env("TWILIO_AUTH_TOKEN", "")
 }
