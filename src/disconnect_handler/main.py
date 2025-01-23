@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""AWS Lambda function handler for closing WebSocket connections."""
 
 import json
 import os

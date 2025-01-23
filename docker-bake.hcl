@@ -33,8 +33,8 @@ group "default" {
 
 target "connect-handler" {
   tags       = ["${REGISTRY}/ws-connect-handler:${TAG}"]
-  context    = "./src/connect_handler"
-  dockerfile = "Dockerfile"
+  context    = "./src"
+  dockerfile = "connect_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
@@ -47,8 +47,8 @@ target "connect-handler" {
 
 target "disconnect-handler" {
   tags       = ["${REGISTRY}/ws-disconnect-handler:${TAG}"]
-  context    = "./src/disconnect_handler"
-  dockerfile = "Dockerfile"
+  context    = "./src"
+  dockerfile = "disconnect_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
@@ -61,8 +61,8 @@ target "disconnect-handler" {
 
 target "media-handler" {
   tags       = ["${REGISTRY}/ws-media-handler:${TAG}"]
-  context    = "./src/media_handler"
-  dockerfile = "Dockerfile"
+  context    = "./src"
+  dockerfile = "media_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]
@@ -75,8 +75,8 @@ target "media-handler" {
 
 target "webhook-handler" {
   tags       = ["${REGISTRY}/ws-webhook-handler:${TAG}"]
-  context    = "./src/webhook_handler"
-  dockerfile = "Dockerfile"
+  context    = "./src"
+  dockerfile = "webhook_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   cache_from = ["type=gha"]

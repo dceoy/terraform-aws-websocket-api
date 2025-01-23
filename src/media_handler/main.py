@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""AWS Lambda function handler for media stream requests from Twilio."""
 
 import json
 from typing import Any

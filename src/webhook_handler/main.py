@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""AWS Lambda function handler for incoming webhook from Twilio."""
 
 import os
 from http import HTTPStatus
@@ -27,7 +28,7 @@ ssm = boto3.client("ssm")
 
 @app.get("/")
 @tracer.capture_method
-def index_page():
+def index_page() -> dict[str, str]:
     """Index page for the Lambda function.
 
     Returns:
@@ -39,14 +40,14 @@ def index_page():
 
 @app.post("/incoming-call")
 @tracer.capture_method
-def handle_incoming_call() -> Response:
+def handle_incoming_call() -> Response[str]:
     """Handle incoming call and return TwiML response to connect to Media Stream.
 
-    Args:
-        request (Request): Incoming HTTP request.
-
     Returns:
-        HTMLResponse: TwiML response to connect to Media Stream.
+        Response[str]: TwiML response to connect to Media Stream.
+
+    Raises:
+        InternalServerError: If the required parameters are missing.
 
     """
     system_name = os.environ["SYSTEM_NAME"]
@@ -70,14 +71,14 @@ def handle_incoming_call() -> Response:
         )
 
 
-def _respond_to_call(media_api_url: str) -> Response:
+def _respond_to_call(media_api_url: str) -> Response[str]:
     """Respond to incoming call with TwiML response.
 
     Args:
         media_api_url (str): Media API URL to connect to.
 
     Returns:
-        Response: TwiML response to connect to Media Stream.
+        Response[str]: TwiML response to connect to Media Stream.
 
     """
     response = VoiceResponse()
@@ -108,14 +109,13 @@ def _validate_twilio_signature(token: str) -> None:
         BadRequestError: If the request signature is invalid.
 
     """
+    validator = RequestValidator(token)
     uri = app.current_event.request_context.domain_name + app.current_event.path
     params = app.current_event.json_body
-    signature = app.current_event.get_header_value(
-        name="X-Twilio-Signature",
-        case_sensitive=True,
-    )
-    validator = RequestValidator(token)
-    if not validator.validate(uri=uri, params=params, signature=signature):
+    signature = app.current_event.headers.get("X-Twilio-Signature")
+    if not signature:
+        raise BadRequestError("Missing X-Twilio-Signature header")
+    elif not validator.validate(uri=uri, params=params, signature=signature):
         raise BadRequestError("Invalid Twilio request signature")
 
 
