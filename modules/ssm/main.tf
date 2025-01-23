@@ -42,4 +42,7 @@ resource "aws_ssm_parameter" "twilio" {
     SystemName = var.system_name
     EnvType    = var.env_type
   }
+  lifecycle {
+    ignore_changes = [value]
+  }
 }

@@ -95,7 +95,7 @@ inputs = {
   docker_image_build_platform             = local.docker_image_build_platforms[local.lambda_architecture]
   docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
   docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
-  dynamodb_name                           = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-websocket-dynamodb-table"
+  dynamodb_table_name                     = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-websocket-dynamodb-table"
   dynamodb_billing_mode                   = "PAY_PER_REQUEST"
   dynamodb_hash_key                       = "connectionId"
   dynamodb_stream_enabled                 = false
@@ -119,5 +119,5 @@ inputs = {
   lambda_logging_config_shadow_log_level      = "INFO"
   lambda_tracing_config_mode                  = "Active"
   lambda_provisioned_concurrent_executions    = -1
-  twilio_auth_token                           = get_env("TWILIO_AUTH_TOKEN", "")
+  twilio_auth_token                           = get_env("TWILIO_AUTH_TOKEN", "dummy")
 }
