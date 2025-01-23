@@ -2,7 +2,6 @@
 
 import json
 import os
-from functools import cache
 from typing import Any
 
 import boto3
@@ -12,18 +11,7 @@ from botocore.exceptions import ClientError
 
 logger = Logger()
 tracer = Tracer()
-
-
-@cache
-def _instantiate_dynamodb_table() -> Any:
-    """Instantiate a DynamoDB table resource.
-
-    Returns:
-        Any: DynamoDB Table resource.
-
-    """
-    table_name = os.environ["DYNAMODB_TABLE_NAME"]
-    return boto3.resource("dynamodb").Table(table_name)
+dynamodb = boto3.client("dynamodb")
 
 
 @logger.inject_lambda_context(log_event=True)
@@ -42,9 +30,11 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         dict[str, Any]: A dictionary representing the API Gateway response.
 
     """
-    table = _instantiate_dynamodb_table()
     try:
-        table.put_item(Item={"connectionId": event["requestContext"]["connectionId"]})
+        dynamodb.put_item(
+            TableName=os.environ["DYNAMODB_TABLE_NAME"],
+            Item={"connectionId": {"S": event["requestContext"]["connectionId"]}},
+        )
     except ClientError:
         logger.exception("Failed to store the connection ID")
         return {

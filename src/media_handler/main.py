@@ -1,28 +1,13 @@
 #!/usr/bin/env python
 
 import json
-import os
-from functools import cache
 from typing import Any
 
-import boto3
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 logger = Logger()
 tracer = Tracer()
-
-
-@cache
-def _instantiate_dynamodb_table() -> Any:
-    """Instantiate a DynamoDB table resource.
-
-    Returns:
-        Any: DynamoDB Table resource.
-
-    """
-    table_name = os.environ["DYNAMODB_TABLE_NAME"]
-    return boto3.resource("dynamodb").Table(table_name)
 
 
 @logger.inject_lambda_context(log_event=True)
