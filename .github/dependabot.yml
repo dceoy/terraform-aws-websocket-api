@@ -16,8 +16,7 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: pip
-    directories:
-      - /src/webhook_handler/
+    directory: /src/
     schedule:
       interval: daily
     versioning-strategy: increase-if-necessary
