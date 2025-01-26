@@ -43,6 +43,12 @@ Installation
     $ terragrunt run-all apply --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
     ```
 
+8.  Update the tokens in Parameter Store.
+
+    ```sh
+    $ aws ssm put-parameter --overwrite --name /toa/dev/twilio-auth-token --value <TWILIO_AUTH_TOKEN>
+    ```
+
 Cleanup
 -------
 

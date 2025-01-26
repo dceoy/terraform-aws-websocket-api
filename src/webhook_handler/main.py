@@ -58,9 +58,8 @@ def handle_incoming_call() -> Response[str]:
     }
     response = ssm.get_parameters(Names=parameter_names, WithDecryption=True)
     if response.get("InvalidParameters"):
-        raise InternalServerError(
-            "Invalid parameters: {}".format(response["InvalidParameters"])
-        )
+        error_message = "Invalid parameters: {}".format(response["InvalidParameters"])
+        raise InternalServerError(error_message)
     else:
         parameters = {p["Name"]: p["Value"] for p in response["Parameters"]}
         _validate_twilio_signature(
@@ -114,9 +113,11 @@ def _validate_twilio_signature(token: str) -> None:
     params = app.current_event.json_body
     signature = app.current_event.headers.get("X-Twilio-Signature")
     if not signature:
-        raise BadRequestError("Missing X-Twilio-Signature header")
+        error_message = "Missing X-Twilio-Signature header"
+        raise BadRequestError(error_message)
     elif not validator.validate(uri=uri, params=params, signature=signature):
-        raise BadRequestError("Invalid Twilio request signature")
+        error_message = "Invalid Twilio request signature"
+        raise BadRequestError(error_message)
 
 
 @logger.inject_lambda_context(
