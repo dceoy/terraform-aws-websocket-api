@@ -26,7 +26,7 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         dict[str, Any]: A dictionary representing the API Gateway response.
 
     """
-    endpoint_url = "https://{d}/{s}".format(d=event["domain"], s=event["stage"])
+    endpoint_url = "wss://{d}/{s}".format(d=event["domain"], s=event["stage"])
     return {
         "statusCode": 200,
         "body": json.dumps({"message": f"Endpoint URL: {endpoint_url}"}),
