@@ -33,7 +33,7 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
     """
     try:
         dynamodb.put_item(
-            TableName=os.environ["DYNAMODB_TABLE_NAME"],
+            TableName=os.environ["CONNECTION_DYNAMODB_TABLE_NAME"],
             Item={"connectionId": {"S": event["requestContext"]["connectionId"]}},
         )
     except ClientError:
