@@ -27,7 +27,7 @@ dependency "docker" {
 dependency "dynamodb" {
   config_path = "../dynamodb"
   mock_outputs = {
-    connection_dynamodb_table_id = "connection-dynamodb-table-id"
+    dynamodb_table_id = "connection-dynamodb-table-id"
   }
   mock_outputs_merge_strategy_with_state = "shallow"
 }
@@ -40,7 +40,7 @@ inputs = {
   webhook_handler_lambda_image_uri    = dependency.docker.outputs.docker_registry_primary_image_uris["webhook-handler"]
   lambda_environment_variables = {
     for k in keys(include.root.locals.ecr_repository_names) : k => {
-      CONNECTION_DYNAMODB_TABLE_NAME = dependency.dynamodb.outputs.connection_dynamodb_table_id
+      CONNECTION_DYNAMODB_TABLE_NAME = dependency.dynamodb.outputs.dynamodb_table_id
       SYSTEM_NAME                    = include.root.inputs.system_name
       ENV_TYPE                       = include.root.inputs.env_type
     }

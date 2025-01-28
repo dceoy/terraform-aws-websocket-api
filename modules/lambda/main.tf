@@ -213,7 +213,10 @@ resource "aws_iam_role_policy" "connections" {
           "dynamodb:DeleteItem",
           "dynamodb:DescribeTable"
         ]
-        Resource = ["arn:aws:dynamodb:${local.region}:${local.account_id}:table/*"]
+        Resource = [
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*/index/*"
+        ]
         Condition = {
           StringEquals = {
             "aws:ResourceTag/SystemName" = var.system_name
@@ -246,7 +249,10 @@ resource "aws_iam_role_policy" "media" {
             "dynamodb:ConditionCheckItem",
             "dynamodb:DescribeTable"
           ]
-          Resource = ["arn:aws:dynamodb:${local.region}:${local.account_id}:table/*"]
+          Resource = [
+            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*",
+            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*/index/*"
+          ]
           Condition = {
             StringEquals = {
               "aws:ResourceTag/SystemName" = var.system_name

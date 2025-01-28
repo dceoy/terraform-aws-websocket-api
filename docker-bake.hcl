@@ -37,6 +37,12 @@ target "connect-handler" {
   dockerfile = "connect_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
+  args = {
+    PYTHON_VERSION = PYTHON_VERSION
+    USER_UID       = USER_UID
+    USER_GID       = USER_GID
+    USER_NAME      = USER_NAME
+  }
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -51,6 +57,12 @@ target "disconnect-handler" {
   dockerfile = "disconnect_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
+  args = {
+    PYTHON_VERSION = PYTHON_VERSION
+    USER_UID       = USER_UID
+    USER_GID       = USER_GID
+    USER_NAME      = USER_NAME
+  }
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -65,6 +77,12 @@ target "media-handler" {
   dockerfile = "media_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
+  args = {
+    PYTHON_VERSION = PYTHON_VERSION
+    USER_UID       = USER_UID
+    USER_GID       = USER_GID
+    USER_NAME      = USER_NAME
+  }
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
@@ -79,6 +97,12 @@ target "webhook-handler" {
   dockerfile = "webhook_handler/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
+  args = {
+    PYTHON_VERSION = PYTHON_VERSION
+    USER_UID       = USER_UID
+    USER_GID       = USER_GID
+    USER_NAME      = USER_NAME
+  }
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true
