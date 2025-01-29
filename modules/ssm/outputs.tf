@@ -12,3 +12,8 @@ output "ssm_parameter_twilio_auth_token_parameter_name" {
   description = "Parameter Store parameter name for Twilio auth token"
   value       = aws_ssm_parameter.twilio.name
 }
+
+output "ssm_parameter_openai_api_key_parameter_name" {
+  description = "Parameter Store parameter name for OpenAI API key"
+  value       = aws_ssm_parameter.openai.name
+}

@@ -31,7 +31,14 @@ variable "media_api_url" {
 variable "twilio_auth_token" {
   description = "Twilio auth token to store in Parameter Store"
   type        = string
-  default     = null
+  default     = "dummy"
+  sensitive   = true
+}
+
+variable "openai_api_key" {
+  description = "OpenAI API key to store in Parameter Store"
+  type        = string
+  default     = "dummy"
   sensitive   = true
 }
 

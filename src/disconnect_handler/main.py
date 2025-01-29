@@ -31,10 +31,13 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         dict[str, Any]: A dictionary representing the API Gateway response.
 
     """
+    connection_id = event["requestContext"]["connectionId"]
+    logger.info("connection_id: %s", connection_id)
+    logger.append_keys(connection_id=connection_id)
     try:
         dynamodb.delete_item(
             TableName=os.environ["CONNECTION_DYNAMODB_TABLE_NAME"],
-            Key={"connectionId": {"S": event["requestContext"]["connectionId"]}},
+            Key={"connectionId": {"S": connection_id}},
         )
     except ClientError:
         logger.exception("Failed to remove the connection ID")

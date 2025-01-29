@@ -16,5 +16,5 @@ locals {
   lambda_function_versions = {
     for k, v in local.lambda_function_qualified_arns : k => endswith(v, ":$LATEST") ? null : split(":", v)[7]
   }
-  media_api_path_wo_slash = replace(var.media_api_path, "^/", "")
+  media_api_path_wo_slash = trimsuffix(var.media_api_path, "/")
 }

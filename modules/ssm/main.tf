@@ -46,3 +46,22 @@ resource "aws_ssm_parameter" "twilio" {
     ignore_changes = [value]
   }
 }
+
+resource "aws_ssm_parameter" "openai" {
+  name            = "/${var.system_name}/${var.env_type}/openai-api-key"
+  description     = "SecureString parameter for OpenAI API key"
+  type            = "SecureString"
+  value           = var.openai_api_key
+  data_type       = var.ssm_parameter_data_type
+  allowed_pattern = var.ssm_parameter_allowed_pattern
+  key_id          = var.kms_key_arn
+  tier            = var.ssm_parameter_tier
+  tags = {
+    Name       = "/${var.system_name}/${var.env_type}/openai-api-key"
+    SystemName = var.system_name
+    EnvType    = var.env_type
+  }
+  lifecycle {
+    ignore_changes = [value]
+  }
+}

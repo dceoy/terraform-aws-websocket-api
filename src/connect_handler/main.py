@@ -31,10 +31,13 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
         dict[str, Any]: A dictionary representing the API Gateway response.
 
     """
+    connection_id = event["requestContext"]["connectionId"]
+    logger.info("connection_id: %s", connection_id)
+    logger.append_keys(connection_id=connection_id)
     try:
         dynamodb.put_item(
             TableName=os.environ["CONNECTION_DYNAMODB_TABLE_NAME"],
-            Item={"connectionId": {"S": event["requestContext"]["connectionId"]}},
+            Item={"connectionId": {"S": connection_id}},
         )
     except ClientError:
         logger.exception("Failed to store the connection ID")

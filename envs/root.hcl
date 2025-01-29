@@ -122,4 +122,5 @@ inputs = {
   media_api_path                              = "/media-stream"
   webhook_api_path                            = "/incoming-call"
   twilio_auth_token                           = get_env("TWILIO_AUTH_TOKEN", "dummy")
+  openai_api_key                              = get_env("OPENAI_API_KEY", "dummy")
 }
