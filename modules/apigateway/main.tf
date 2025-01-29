@@ -120,7 +120,7 @@ resource "aws_apigatewayv2_route" "media" {
   operation_name     = "${aws_apigatewayv2_api.websocket.name}-media-route"
   api_id             = aws_apigatewayv2_api.websocket.id
   authorization_type = "NONE"
-  route_key          = "media"
+  route_key          = local.media_api_path_wo_slash
   target             = "integrations/${aws_apigatewayv2_integration.media.id}"
 }
 
@@ -139,7 +139,7 @@ resource "aws_lambda_permission" "media" {
   function_name = local.lambda_function_names["media-handler"]
   qualifier     = local.lambda_function_versions["media-handler"]
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*media"
+  source_arn    = "arn:aws:execute-api:${local.region}:${local.account_id}:${aws_apigatewayv2_api.websocket.id}/*${local.media_api_path_wo_slash}"
   lifecycle {
     create_before_destroy = true
   }

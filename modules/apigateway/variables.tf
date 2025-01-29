@@ -56,6 +56,12 @@ variable "media_handler_lambda_function_invoke_arn" {
   type        = string
 }
 
+variable "media_api_path" {
+  description = "API path for the media handler"
+  type        = string
+  default     = "/media-stream"
+}
+
 variable "apigateway_api_version" {
   description = "Version identifier for the API Gateway"
   type        = string

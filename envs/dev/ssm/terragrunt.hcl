@@ -28,9 +28,21 @@ dependency "apigateway" {
 }
 
 inputs = {
-  kms_key_arn     = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
-  webhook_api_url = dependency.lambda.outputs.webhook_handler_lambda_function_url
-  media_api_url   = dependency.apigateway.outputs.apigateway_api_stage_invoke_url
+  kms_key_arn = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
+  webhook_api_url = join(
+    "",
+    [
+      dependency.apigateway.outputs.apigateway_api_stage_invoke_url,
+      include.root.inputs.webhook_api_path
+    ]
+  )
+  media_api_url = join(
+    "",
+    [
+      dependency.apigateway.outputs.apigateway_api_stage_invoke_url,
+      include.root.inputs.media_api_path
+    ]
+  )
 }
 
 terraform {

@@ -120,10 +120,12 @@ def _respond_to_call(media_api_url: str) -> Response[str]:
     logger.info("Connecting to Media Stream: %s", media_api_url)
     connect.stream(url=media_api_url)
     response.append(connect)
+    body = str(response)
+    logger.info("body: %s", body)
     return Response(
-        status_code=HTTPStatus.OK,  # 200
+        status_code=HTTPStatus.OK,
         content_type="application/xml",
-        body=str(response),
+        body=body,
     )
 
 

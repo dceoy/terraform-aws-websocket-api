@@ -119,5 +119,7 @@ inputs = {
   lambda_logging_config_shadow_log_level      = "INFO"
   lambda_tracing_config_mode                  = "Active"
   lambda_provisioned_concurrent_executions    = -1
+  media_api_path                              = "/media-stream"
+  webhook_api_path                            = "/incoming-call"
   twilio_auth_token                           = get_env("TWILIO_AUTH_TOKEN", "dummy")
 }
