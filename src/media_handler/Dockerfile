@@ -62,7 +62,7 @@ RUN \
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
-      cp /mnt/host/media_handler/main.py "${LAMBDA_TASK_ROOT}/"
+      cp /mnt/host/src/media_handler/main.py "${LAMBDA_TASK_ROOT}/"
 
 HEALTHCHECK NONE
 

@@ -62,7 +62,7 @@ RUN \
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
-      cp /mnt/host/webhook_handler/main.py "${LAMBDA_TASK_ROOT}/"
+      cp /mnt/host/src/webhook_handler/main.py "${LAMBDA_TASK_ROOT}/"
 
 HEALTHCHECK NONE
 

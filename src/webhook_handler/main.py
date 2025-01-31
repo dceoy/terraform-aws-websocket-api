@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """AWS Lambda function handler for incoming webhook from Twilio."""
 
+import json
 import os
 from http import HTTPStatus
 from typing import Any
@@ -11,6 +12,7 @@ from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import (
     LambdaFunctionUrlResolver,
     Response,
+    content_types,
 )
 from aws_lambda_powertools.event_handler.exceptions import (
     BadRequestError,
@@ -31,14 +33,18 @@ ssm = boto3.client("ssm")
 
 @app.get("/")
 @tracer.capture_method
-def index_page() -> dict[str, str]:
+def index_page() -> Response[str]:
     """Index page for the Lambda function.
 
     Returns:
-        dict[str, str]: A dictionary containing a message
+        Response[str]: A JSON response indicating the function is running.
 
     """
-    return {"message": "The function is running!"}
+    return Response(
+        status_code=HTTPStatus.OK,  # 200
+        content_type=content_types.APPLICATION_JSON,  # application/json
+        body=json.dumps({"message": "The function is running!"}),
+    )
 
 
 @app.post("/incoming-call")
@@ -179,4 +185,4 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
 
     """
     logger.info("Event received")
-    return app.resolve(event, context)
+    return app.resolve(event=event, context=context)
