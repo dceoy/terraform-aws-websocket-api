@@ -28,7 +28,6 @@ from twilio.twiml.voice_response import Connect, VoiceResponse
 logger = Logger()
 tracer = Tracer()
 app = LambdaFunctionUrlResolver()
-ssm = boto3.client("ssm")
 
 
 @app.get("/")
@@ -95,7 +94,7 @@ def _retrieve_ssm_parameters(*names: str) -> dict[str, str]:
         InternalServerError: If the parameters are invalid.
 
     """
-    response = ssm.get_parameters(Names=names, WithDecryption=True)
+    response = boto3.client("ssm").get_parameters(Names=names, WithDecryption=True)
     if response.get("InvalidParameters"):
         error_message = "Invalid parameters: {}".format(response["InvalidParameters"])
         raise InternalServerError(error_message)
