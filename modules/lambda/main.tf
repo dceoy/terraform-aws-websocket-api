@@ -111,7 +111,7 @@ resource "aws_iam_role" "functions" {
 
 resource "aws_iam_role_policy_attachments_exclusive" "functions" {
   for_each  = aws_iam_role.functions
-  role_name = each.value.id
+  role_name = each.value.name
   policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
